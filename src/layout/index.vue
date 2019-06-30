@@ -58,6 +58,7 @@
           />
         </GmapMap>
       </section>
+      <maplegend />
     </div>
     <!-- Widget Pane -->
     <transition name="fade-transform" mode="out-in">
@@ -67,7 +68,7 @@
 </template>
 
 <script>
-import { Navbar, Sidebar } from './components'
+import { Navbar, Sidebar, Maplegend } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import http from '@/utils/http'
 
@@ -75,7 +76,8 @@ export default {
   name: 'Layout',
   components: {
     Navbar,
-    Sidebar
+    Sidebar,
+    Maplegend
   },
   mixins: [ResizeMixin],
   data() {
