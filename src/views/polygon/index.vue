@@ -1,0 +1,146 @@
+<template>
+  <div class="page-container">
+    <div class="close-bar">
+      <span class="sub-title">Polygon Selection</span>
+      <img class="collapse-icon" src="@/icons/collapse.png" alt="collapse" @click="closeTab">
+    </div>
+
+    <div class="main-content">
+      <el-row>
+        <el-col :span="12">
+          <img class="marker-icon" src="./icon/red-flags.png" alt>
+          <img class="marker-icon" src="./icon/blue-flags.png" alt>
+        </el-col>
+        <el-col :span="12" style="position:relative;right:10px;">
+          <img class="marker-icon" src="./icon/red-circle.png" alt>
+          <img class="marker-icon" src="./icon/blue-circle.png" alt>
+        </el-col>
+      </el-row>
+
+      <el-row>
+        <el-col :span="12">
+          <el-radio
+            v-model="radio"
+            label="1"
+            style="display:block;margin-top:3px;"
+          >
+            <span style="font-size:16px;">Underground</span>
+          </el-radio>
+        </el-col>
+        <el-col :span="12">
+          <el-radio
+            v-model="radio"
+            label="2"
+            style="display:block;margin-top:3px;position:relative;right:23px;"
+            size="medium"
+          >
+            <span style="font-size:16px;">Surface</span>
+          </el-radio>
+        </el-col>
+      </el-row>
+      <div class="button-block">
+
+        <el-row>
+          <el-col :span="24">
+            <el-button type="primary" plain style="width:250px;">Highlight wells</el-button>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-button type="primary" plain style="width:250px;">Clear highlighted wells</el-button>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-button type="primary" plain style="width:250px;">Select wells</el-button>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-button type="primary" plain style="width:250px;">Remove selection</el-button>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-button type="primary" plain style="width:250px;">Reset selection</el-button>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            0 wells intersected
+          </el-col>
+        </el-row>
+      </div>
+
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      radio: '1'
+    }
+  },
+  methods: {
+    closeTab: function() {
+      this.$router.replace({ path: '/home' })
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.page {
+    &-container {
+        width: 340px;
+        position: absolute;
+        top: 0;
+        background-color: white;
+        z-index: 1;
+        height: 100vh;
+        box-shadow: 3px 3px 3px #888888;
+    }
+    &-text {
+        font-size: 50px;
+        line-height: 66px;
+    }
+}
+
+.close-bar {
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid rgba(182, 182, 182, 0.838);
+}
+.sub-title {
+    line-height: 50px;
+    font-size: 20px;
+}
+
+.collapse-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 35px;
+    height: 35px;
+}
+
+.main-content {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.marker-icon {
+    width: 30px;
+    height: 30px;
+}
+.button-block{
+  margin: 15px 5px;
+}
+.el-row{
+  margin: 7px 0;
+}
+</style>
