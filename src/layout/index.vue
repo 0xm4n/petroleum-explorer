@@ -62,7 +62,7 @@
     </div>
     <!-- Widget Pane -->
     <transition name="fade-transform" mode="out-in">
-      <router-view :key="key" />
+      <router-view :key="key" @search="updataMapData($event,userDefined)" />
     </transition>
   </div>
 </template>
@@ -100,7 +100,8 @@ export default {
         operator: null,
         status: null,
         type: null
-      }
+      },
+      userDefined: ''
     }
   },
   computed: {
@@ -126,21 +127,30 @@ export default {
     }
   },
   created() {
-    var that = this
-    http.get('/getWellsTopPoint')
-      .then(function(response) {
-        that.topMarkers = response.data
-      })
-    http.get('/getWellsBottomPoint')
-      .then(function(response) {
-        that.bottomMarkers = response.data
-      })
-    http.get('/getWellsPath')
-      .then(function(response) {
-        that.paths = response.data
-      })
+    this.init()
   },
   methods: {
+    init() {
+      var that = this
+      // http.get('/getWellsTopPoint')
+      //   .then(function(response) {
+      //     that.topMarkers = response.data
+      //   })
+      // http.get('/getWellsBottomPoint')
+      //   .then(function(response) {
+      //     that.bottomMarkers = response.data
+      //   })
+      // http.get('/getWellsPath')
+      //   .then(function(response) {
+      //     that.paths = response.data
+      //   })
+      http.get('/initMapData')
+        .then(function(response) {
+          that.topMarkers = response.data.topPoint
+          that.bottomMarkers = response.data.bottomPoint
+          that.paths = response.data.path
+        })
+    },
     handleClickOutside() {
       this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
     },
@@ -162,6 +172,11 @@ export default {
         this.infoOpened = true
         this.infoCurrentKey = key
       }
+    },
+    updataMapData: function(params) {
+      this.topMarkers = params.topPoint
+      this.bottomMarkers = params.bottomPoint
+      this.paths = params.path
     }
   }
 }

@@ -7,36 +7,50 @@
 
     <div class="main-content">
       <el-collapse v-model="activeName" accordion>
+        <!-- UWI搜索 -->
         <el-collapse-item name="1">
           <template slot="title">
             <span class="item-title">UWI</span>
           </template>
           <div class="expansion-content" style>
-            <el-input v-model="input" placeholder="UWI Code" style="width:200px;" />
+            <el-input v-model="uwiInput" placeholder="UWI Code" style="width:200px;" />
           </div>
+          <el-button
+            type="primary"
+            plain
+            style="width:200px;margin-top:30px;"
+            @click="searchByUWI"
+          >Search</el-button>
         </el-collapse-item>
-
+        <!-- UWI Field搜索 -->
         <el-collapse-item name="2">
           <template slot="title">
             <span class="item-title">UWI Fields</span>
           </template>
+          <div>
+            <span style="position:relative;right:25px;">LSD</span>
+            <span style="position:relative;right:12px;">SEC</span>
+            <span>TWP</span>
+            <span style="position:relative;left:10px;">RNG</span>
+            <span style="position:relative;left:26px;">MER</span>
+          </div>
           <div class="expansion-content" style>
-            <input class="short-input" type="text">
+            <input v-model="uwiFieldInput.first" class="short-input" type="text" maxlength="2">
             /
-            <input class="short-input" type="text">
+            <input v-model="uwiFieldInput.lsd" class="short-input" type="text" maxlength="2">
             -
-            <input class="short-input" type="text">
+            <input v-model="uwiFieldInput.sec" class="short-input" type="text" maxlength="2">
             -
-            <input class="short-input" type="text">
+            <input v-model="uwiFieldInput.twp" class="short-input" type="text" maxlength="3">
             -
-            <input class="short-input" type="text">
+            <input v-model="uwiFieldInput.rng" class="short-input" type="text" maxlength="2">
             W
-            <input class="short-input" type="text">
+            <input v-model="uwiFieldInput.mer" class="short-input" type="text" maxlength="1">
             /
-            <input class="short-input" type="text">
+            <input v-model="uwiFieldInput.last" class="short-input" type="text" maxlength="1">
           </div>
         </el-collapse-item>
-
+        <!-- Company搜索 -->
         <el-collapse-item title="Company" name="3">
           <template slot="title">
             <span class="item-title">Company</span>
@@ -45,23 +59,33 @@
             <el-input v-model="input" placeholder="Company Name" style="width:200px;" />
           </div>
         </el-collapse-item>
-
+        <!-- Status搜索 -->
         <el-collapse-item title="Status" name="4">
           <template slot="title">
             <span class="item-title">Status</span>
           </template>
           <div class="expansion-content" style>
-            <el-select v-model="model1" placeholder="Select a chart" style="width:250px;">
+            <el-select
+              v-model="statusValue"
+              placeholder="Select a chart"
+              style="width:250px;"
+            >
               <el-option
-                v-for="item in options"
+                v-for="item in statusOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               />
             </el-select>
           </div>
+          <el-button
+            type="primary"
+            plain
+            style="width:200px;margin-top:30px;"
+            @click="searchByStatus"
+          >Search</el-button>
         </el-collapse-item>
-
+        <!-- 日期搜索 -->
         <el-collapse-item title="Production date" name="5">
           <template slot="title">
             <span class="item-title">Production Date</span>
@@ -76,49 +100,101 @@
           </div>
         </el-collapse-item>
       </el-collapse>
-      <el-button type="primary" plain style="width:200px;margin-top:30px;">Search</el-button>
+      <el-button
+        type="info"
+        style="width:100px;margin-top:30px;"
+        @click="clearAll"
+      >Clear all</el-button>
     </div>
   </div>
 </template>
 
 <script>
+import http from '@/utils/http'
+
 export default {
   data() {
     return {
       activeName: '1',
+      uwiInput: '',
+      uwiFieldInput: {
+        first: null,
+        lsd: null,
+        sec: null,
+        twp: null,
+        rng: null,
+        mer: null,
+        last: null
+      },
       input: '',
-      options: [{
-        value: 'selection1',
-        label: 'Abandoned'
-      }, {
-        value: 'selection2',
-        label: 'Abandoned & Whipstocked'
-      }, {
-        value: 'selection3',
-        label: 'Abandoned Zone'
-      }, {
-        value: 'selection4',
-        label: 'Drilled and Cased'
-      }, {
-        value: 'selection5',
-        label: 'Obserbation'
-      }, {
-        value: 'selection6',
-        label: 'Steam Assis Gravity Drain'
-      }, {
-        value: 'selection7',
-        label: 'Suspended Steam Assis Gravity Drain'
-      }],
-      model1: '',
+      statusOptions: [
+        {
+          value: 'ABANDONED',
+          label: 'Abandoned'
+        }, {
+          value: 'ABANDONED & WHIPSTOCKED',
+          label: 'Abandoned & Whipstocked'
+        }, {
+          value: 'ABANDONED ZONE',
+          label: 'Abandoned Zone'
+        }, {
+          value: 'DRILLED AND CASED',
+          label: 'Drilled and Cased'
+        }, {
+          value: 'OBSERBATION',
+          label: 'Obserbation'
+        }, {
+          value: 'STEAM ASSIS GRAVITY DRAIN',
+          label: 'Steam Assis Gravity Drain'
+        }, {
+          value: 'SUSPENDED STEAM ASSIS GRAVITY DRAIN',
+          label: 'Suspended Steam Assis Gravity Drain'
+        }
+      ],
+      statusValue: '',
       value1: ''
     }
   },
   methods: {
     closeTab: function() {
       this.$router.replace({ path: '/home' })
+    },
+    searchByUWI: function() {
+      const that = this
+      http.get('/searchByUWI',
+        {
+          params: {
+            uwi: that.uwiInput
+          }
+        }
+      )
+        .then(function(response) {
+          that.$emit('search', response.data)
+        })
+    },
+    searchByStatus: function() {
+      const that = this
+      http.get('/searchByStatus',
+        {
+          params: {
+            status: this.statusValue
+          }
+        }
+      )
+        .then(function(response) {
+          that.$emit('search', response.data)
+        })
+    },
+    clearAll: function() {
+      var that = this
+      http.get('/initMapData')
+        .then(function(response) {
+          that.$emit('search', response.data)
+        })
     }
   }
 }
+
 </script>
 
 <style lang="scss" scoped>
@@ -175,5 +251,4 @@ export default {
     text-align: center;
     margin-top: 10px;
 }
-
 </style>

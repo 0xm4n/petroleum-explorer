@@ -1,11 +1,13 @@
-var Router = require('koa-router');
-var router = new Router();
+var Router = require('koa-router')
+var router = new Router()
 
 var Wells = require('../controllers/wells-data.js')
+var Search = require('../controllers/search.js')
 
-router.get('/getWellsTopPoint',Wells.getWellsTopPoint);
-router.get('/getWellsBottomPoint',Wells.getWellsBottomPoint);
-router.get('/getWellsPath',Wells.getWellsPath);
+router.get('/initMapData', Wells.initMapData)
+
+router.get('/searchByUWI', Search.searchByUWI)
+router.get('/searchByStatus', Search.searchByStatus)
 
 module.exports = router
 
