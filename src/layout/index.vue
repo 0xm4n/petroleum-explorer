@@ -95,8 +95,10 @@
 <script>
 import { Navbar, Sidebar, Maplegend } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
+import polygonMixin from './mixin/polygonFunction'
+
 import http from '@/utils/http'
-var drawingManager
+
 export default {
   name: 'Layout',
   components: {
@@ -104,7 +106,7 @@ export default {
     Sidebar,
     Maplegend
   },
-  mixins: [ResizeMixin],
+  mixins: [ResizeMixin, polygonMixin],
   data() {
     return {
       topMarkers: [],
@@ -129,8 +131,6 @@ export default {
       polygons: [],
       topMarkersIcon: [],
       bottomMarkersIcon: [],
-      topMarkerNum: null,
-      bottomMarkerNum: null,
       update: true
     }
   },
@@ -154,6 +154,12 @@ export default {
         withoutAnimation: this.sidebar.withoutAnimation,
         mobile: this.device === 'mobile'
       }
+    },
+    topMarkerNum() {
+      return this.topMarkers.length
+    },
+    bottomMarkerNum() {
+      return this.bottomMarkers.length
     }
   },
   created() {
@@ -164,14 +170,12 @@ export default {
       var self = this
       http.get('/initMapData')
         .then(function(response) {
-          self.topMarkerNum = response.data.topPoint.length
-          // topMarkersIcon数组用来存储marker当前状态，不同状态对应不同的icon
-          self.topMarkersIcon = Array(self.topMarkerNum).fill({ url: require('./icon/top-red-marker.png') })
-          self.bottomMarkerNum = response.data.bottomPoint.length
-          // bottomMarkersIcon数组用来存储marker当前状态，不同状态对应不同的icon
-          self.bottomMarkersIcon = Array(self.bottomMarkerNum).fill({ url: require('./icon/red-pin-smaller.png') })
           self.topMarkers = response.data.topPoint
           self.bottomMarkers = response.data.bottomPoint
+          // topMarkersIcon数组用来存储marker当前状态，不同状态对应不同的icon
+          self.topMarkersIcon = Array(self.topMarkerNum).fill({ url: require('./icon/top-red-marker.png') })
+          // bottomMarkersIcon数组用来存储marker当前状态，不同状态对应不同的icon
+          self.bottomMarkersIcon = Array(self.bottomMarkerNum).fill({ url: require('./icon/red-pin-smaller.png') })
           self.paths = response.data.path
         })
     },
@@ -202,65 +206,6 @@ export default {
       this.bottomMarkers = params.bottomPoint
       this.paths = params.path
     },
-    createPolyDrawControl: function() {
-      var self = this
-      drawingManager = new window.google.maps.drawing.DrawingManager({
-        drawingControl: true,
-        drawingControlOptions: {
-          position: window.google.maps.ControlPosition.TOP_CENTER,
-          drawingModes: ['polygon']
-        },
-        polygonOptions: {
-          strokeWeight: 2,
-          editable: true
-        }
-      })
-      drawingManager.setMap(this.$refs.gmap.$mapObject)
-      window.google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
-        // Get overlay paths
-        const paths = event.overlay.getPaths().getArray()
-        // Remove overlay from map
-        event.overlay.setMap(null)
-
-        // Disable drawingManager
-        drawingManager.setDrawingMode(null)
-
-        // Create Polygon
-        self.polygons = paths
-        // self.savePolygon(paths)
-      })
-    },
-    delPolyDrawControl() {
-      drawingManager.setMap(null)
-    },
-    highlightWells() {
-      for (let i = 0; i < this.topMarkers.length; i++) {
-        var topPoint = new window.google.maps.LatLng(this.$refs.tMarker[i].position)
-        var topIsSelect = window.google.maps.geometry.poly.containsLocation(topPoint, this.$refs.polygon.$polygonObject)
-        if (topIsSelect) {
-          this.topMarkersIcon[i] = { url: require('./icon/top-light-blue-marker.png') }
-          this.bottomMarkersIcon[i] = { url: require('./icon/light-blue-pin-smaller.png') }
-        }
-      }
-      for (let i = 0; i < this.bottomMarkers.length; i++) {
-        var bottomPoint = new window.google.maps.LatLng(this.$refs.bMarker[i].position)
-        var bottomIsSelect = window.google.maps.geometry.poly.containsLocation(bottomPoint, this.$refs.polygon.$polygonObject)
-        if (bottomIsSelect) {
-          this.topMarkersIcon[i] = { url: require('./icon/top-light-blue-marker.png') }
-          this.bottomMarkersIcon[i] = { url: require('./icon/light-blue-pin-smaller.png') }
-        }
-      }
-      this.update = false
-      this.update = true
-    },
-    clearHighlightWells() {
-      for (let i = 0; i < this.topMarkers.length; i++) {
-        this.topMarkersIcon[i] = { url: require('./icon/top-red-marker.png') }
-        this.bottomMarkersIcon[i] = { url: require('./icon/red-pin-smaller.png') }
-      }
-      this.update = false
-      this.update = true
-    },
     polygonOperation(params) {
       switch (params) {
         case 1:
@@ -275,10 +220,20 @@ export default {
         case 4:
           this.clearHighlightWells()
           break
+        case 5:
+          this.selectWells()
+          break
+        case 6:
+          this.removeWells()
+          break
+        case 7:
+          this.removePolygon()
+          break
+        case 8:
+          this.resetSelection()
+          break
       }
     }
-    // selectWells() {
-    // }
   }
 }
 </script>

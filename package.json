@@ -19,6 +19,7 @@
     "element-ui": "2.7.2",
     "iview": "^3.4.2",
     "js-cookie": "2.2.0",
+    "lodash": "^4.17.11",
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
     "path-to-regexp": "2.4.0",

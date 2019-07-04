@@ -6,7 +6,7 @@
     </div>
 
     <div class="main-content">
-      <el-row>
+      <!-- <el-row>
         <el-col :span="12">
           <img class="marker-icon" src="./icon/red-flags.png" alt>
           <img class="marker-icon" src="./icon/blue-flags.png" alt>
@@ -15,9 +15,9 @@
           <img class="marker-icon" src="./icon/red-circle.png" alt>
           <img class="marker-icon" src="./icon/blue-circle.png" alt>
         </el-col>
-      </el-row>
+      </el-row> -->
 
-      <el-row>
+      <!-- <el-row>
         <el-col :span="12">
           <el-radio
             v-model="radio"
@@ -37,39 +37,52 @@
             <span style="font-size:16px;">Surface</span>
           </el-radio>
         </el-col>
-      </el-row>
+      </el-row> -->
       <div class="button-block">
+        <div class="block-pair">
+          <el-row>
+            <el-col :span="24">
+              <el-button type="primary" plain style="width:250px;" @click="highlight()">Highlight wells</el-button>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <el-button type="primary" plain style="width:250px;" @click="clearHighlight()">Clear highlighted wells</el-button>
+            </el-col>
+          </el-row>
+        </div>
 
-        <el-row>
-          <el-col :span="24">
-            <el-button type="primary" plain style="width:250px;" @click="highlight()">Highlight wells</el-button>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-button type="primary" plain style="width:250px;" @click="clearHighlight()">Clear highlighted wells</el-button>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-button type="primary" plain style="width:250px;">Select wells</el-button>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-button type="primary" plain style="width:250px;">Remove selection</el-button>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-button type="primary" plain style="width:250px;">Reset selection</el-button>
-          </el-col>
-        </el-row>
-        <el-row>
+        <div class="block-pair">
+          <el-row>
+            <el-col :span="24">
+              <el-button type="primary" plain style="width:250px;" @click="selectWells()">Select wells</el-button>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <el-button type="primary" plain style="width:250px;" @click="removeWells()">Remove wells</el-button>
+            </el-col>
+          </el-row>
+        </div>
+
+        <div class="block-pair">
+          <el-row>
+            <el-col :span="24">
+              <el-button type="primary" plain style="width:250px;" @click="removePolygon()">Remove polygon</el-button>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <el-button type="primary" plain style="width:250px;" @click="resetSelection()">Reset selection</el-button>
+            </el-col>
+          </el-row>
+        </div>
+
+        <!-- <el-row>
           <el-col :span="24">
             0 wells intersected
           </el-col>
-        </el-row>
+        </el-row> -->
       </div>
 
     </div>
@@ -80,10 +93,11 @@
 // 1 stand for create drawing control
 // 2 stand for remove drawing control
 // 3 stand for highlight wells
-// 3 stand for clear highlight wells
-// 4 stand for select wells
-// 5 stand for remove wells
-// 6 stand for reset selection
+// 4 stand for clear highlight wells
+// 5 stand for select wells
+// 6 stand for remove wells
+// 7 stand for remove polygon
+// 8 stand for reset selection
 export default {
   data() {
     return {
@@ -103,6 +117,18 @@ export default {
     },
     clearHighlight() {
       this.$emit('polygon', 4)
+    },
+    selectWells() {
+      this.$emit('polygon', 5)
+    },
+    removeWells() {
+      this.$emit('polygon', 6)
+    },
+    removePolygon() {
+      this.$emit('polygon', 7)
+    },
+    resetSelection() {
+      this.$emit('polygon', 8)
     }
   }
 }
@@ -158,6 +184,10 @@ export default {
   margin: 15px 5px;
 }
 .el-row{
-  margin: 7px 0;
+  margin: 5px 0;
+}
+
+.block-pair{
+  margin: 25px 5px;
 }
 </style>
