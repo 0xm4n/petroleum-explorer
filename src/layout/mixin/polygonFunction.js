@@ -76,10 +76,12 @@ export default {
       for (let i = 0; i < this.bottomMarkers.length; i++) {
         var bottomPoint = new window.google.maps.LatLng(this.$refs.bMarker[i].position)
         var bottomIsSelect = window.google.maps.geometry.poly.containsLocation(bottomPoint, this.$refs.polygon.$polygonObject)
-        if (bottomIsSelect) {
-          isSelect[i] = true
-        } else {
-          isSelect[i] = false
+        if (isSelect[i] === false) {
+          if (bottomIsSelect) {
+            isSelect[i] = true
+          } else {
+            isSelect[i] = false
+          }
         }
       }
       var tempTopMarkers = []
@@ -143,7 +145,6 @@ export default {
     },
     resetSelection() {
       this.init()
-      this.polygons = []
       this.update = false
       this.update = true
     }

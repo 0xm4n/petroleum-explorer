@@ -7,58 +7,60 @@
     </div>
 
     <div class="main-content">
-      <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-        <el-tab-pane label="Categorical" name="first">
-          <div style="margin-top:15px;">
+      <el-collapse v-model="activeCollapse" accordion>
+        <!-- Categorical -->
+        <el-collapse-item name="1">
+          <template slot="title">
+            <span class="item-title">Categorical</span>
+          </template>
+          <div class="expansion-content" style>
             <el-select
-              v-model="value"
-              placeholder="Select"
+              v-model="categoryType"
+              placeholder="Select Classification Type"
               size="medium"
               style="width: 250px;"
             >
               <el-option
-                v-for="item in options"
+                v-for="item in categoryOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               />
             </el-select>
-            <div class="search-button">
-              <el-button type="primary" size="medium" plain style="width:200px;">Apply</el-button>
-            </div>
           </div>
-
-        </el-tab-pane>
-
-        <el-tab-pane label="Numerical" name="second">
-          <div style="margin-top:15px;">
+          <el-button
+            type="primary"
+            plain
+            style="width:200px;margin-top:15px;"
+          >Apply</el-button>
+        </el-collapse-item>
+        <!-- Numerical -->
+        <el-collapse-item name="2">
+          <template slot="title">
+            <span class="item-title">Numerical</span>
+          </template>
+          <div class="expansion-content" style>
             <el-select
-              v-model="value1"
+              v-model="numericalType"
               placeholder="Select classification type"
               size="medium"
               style="width: 250px;"
             >
               <el-option
-                v-for="item in optionsNumerical"
+                v-for="item in numericalOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               />
             </el-select>
             <el-row>
-              <el-col :span="12">
-                <el-radio v-model="radio" label="1" style>Equal Interval</el-radio>
-              </el-col>
-              <el-col :span="12">
-                <span>Classes</span>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="12">
-                <el-radio v-model="radio" label="2" style>Quantile</el-radio>
-              </el-col>
-              <el-col :span="12">
-                <el-select v-model="value" placeholder="Select Class" style="width:140px;">
+              <el-col :span="24">
+                <el-select
+                  v-model="numericalType"
+                  placeholder="Select Class Number"
+                  size="medium"
+                  style="width:250px;"
+                >
                   <el-option
                     v-for="item in classOptions"
                     :key="item.value"
@@ -70,13 +72,19 @@
             </el-row>
             <el-row>
               <el-col :span="24">
-                <el-button type="primary" size="medium" plain style="width:200px; margin-top:15px;">Apply</el-button>
+                <el-radio v-model="numericalRadio" label="1">Equal Interval</el-radio>
+                <el-radio v-model="numericalRadio" label="2">Quantile</el-radio>
               </el-col>
             </el-row>
-          </div>
 
-        </el-tab-pane>
-      </el-tabs>
+          </div>
+          <el-button
+            type="primary"
+            plain
+            style="width:200px;"
+          >Apply</el-button>
+        </el-collapse-item>
+      </el-collapse>
     </div>
   </div>
 </template>
@@ -85,44 +93,59 @@
 export default {
   data() {
     return {
-      activeName: 'first',
-      value: '',
-      value1: '',
-      options: [{
-        value: 'selection1',
-        label: 'Well Class'
-      }, {
-        value: 'selection2',
-        label: 'Well Current Status'
-      }, {
-        value: 'selection3',
-        label: 'Well Type'
-      }, {
-        value: 'selection4',
-        label: 'Pad'
-      }],
-      optionsNumerical: [{
-        value: 'selection1',
-        label: 'Well Class'
-      }, {
-        value: 'selection2',
-        label: 'Well Current Status'
-      }, {
-        value: 'selection3',
-        label: 'Well Type'
-      }, {
-        value: 'selection4',
-        label: 'Pad'
-      }],
-      radio: '1',
+      activeCollapse: '1',
+      categoryType: '',
+      numericalType: '',
+      numericalRadio: '1',
+      categoryOptions: [
+        {
+          value: 'Well Class',
+          label: 'Well Class'
+        }, {
+          value: 'Well Current Status',
+          label: 'Well Current Status'
+        }, {
+          value: 'Well Type',
+          label: 'Well Type'
+        }, {
+          value: 'Pad',
+          label: 'Pad'
+        }
+      ],
+      numericalOptions: [
+        {
+          value: 'Average Injection Hours',
+          label: 'Average Injection Hours'
+        }, {
+          value: 'Average Oil Production',
+          label: 'Average Oil Production'
+        }, {
+          value: 'Average SOR',
+          label: 'Average SOR'
+        }, {
+          value: 'Average Steam Injection',
+          label: 'Average Steam Injection'
+        }, {
+          value: 'Well Drillers Total Depth',
+          label: 'Well Drillers Total Depth'
+        }
+      ],
       classOptions: [
         {
-          value: 'selection1',
+          value: '1',
           label: '1'
         },
         {
-          value: 'selection2',
+          value: '2',
           label: '2'
+        },
+        {
+          value: '3',
+          label: '3'
+        },
+        {
+          value: '4',
+          label: '4'
         }
       ]
     }
@@ -176,15 +199,19 @@ font-size: 20px;
   text-align: center;
 }
 
-.search-button {
-    text-align: center;
-    margin-top: 30px;
-}
-
 .el-row {
     width: 340px;
-    margin-right: auto;
-    margin-left: auto;
-    line-height: 40px;
+    margin: 25px auto;
+}
+.item-title {
+    margin-left: 15px;
+    font-size: 16px;
+}
+
+.expansion-content {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
 }
 </style>
