@@ -15,12 +15,18 @@
       <!-- Google Map -->
       <section class="app-main">
         <GmapMap
+          ref="gmap"
           class="google-map"
           :center="{lat:57.222022, lng:-110.88281}"
           :zoom="13"
           map-type-id="terrain"
         >
-          <gmap-info-window :options="infoOptions" :position="infoPosition" :opened="infoOpened" @closeclick="infoOpened=false">
+          <gmap-info-window
+            :options="infoOptions"
+            :position="infoPosition"
+            :opened="infoOpened"
+            @closeclick="infoOpened=false"
+          >
             <div class="label-title">Unique Well Identifier</div>
             <div class="label-content">{{ infoContent.uwi }}</div>
             <div class="label-title">Well Operator</div>
@@ -31,38 +37,57 @@
             <div class="label-content">{{ infoContent.type }}</div>
           </gmap-info-window>
 
-          <!-- top -->
-          <gmap-marker
-            v-for="mt in topMarkers"
-            :key="mt.index"
-            :position="getPosition(mt)"
-            :clickable="true"
-            :icon="{ url: require('./icon/top-red-marker.png')}"
-            @click="toggleInfo(mt, mt.index)"
-          />
+          <!-- marker -->
+          <div v-if="update">
+            <!-- top-marker -->
+            <gmap-marker
+              v-for="(mt,index) in topMarkers"
+              ref="tMarker"
+              :key="mt.index"
+              :position="getPosition(mt)"
+              :clickable="true"
+              :icon="topMarkersIcon[index]"
+              @click="toggleInfo(mt, mt.index)"
+            />
 
-          <!-- bottom -->
-          <gmap-marker
-            v-for="mb in bottomMarkers"
-            :key="mb.index"
-            :position="getPosition(mb)"
-            :clickable="true"
-            :icon="{ url: require('./icon/red-pin-smaller.png')}"
-            @click="toggleInfo(mb, mb.index)"
-          />
+            <!-- bottom-marker -->
+            <gmap-marker
+              v-for="(mb, index) in bottomMarkers"
+              ref="bMarker"
+              :key="mb.index"
+              :position="getPosition(mb)"
+              :clickable="true"
+              :icon="bottomMarkersIcon[index]"
+              @click="toggleInfo(mb, mb.index)"
+            />
+          </div>
+          <!-- polyline -->
           <gmap-polyline
             v-for="l in paths"
             :key="l.index"
             :path.sync="l"
             :options="{ strokeColor:'#000000',strokeWeight: 0.8}"
           />
+
+          <!-- polygon -->
+          <gmap-polygon
+            ref="polygon"
+            :paths="polygons"
+            :options="{strokeWeight:2}"
+            :editable="true"
+          />
+
         </GmapMap>
       </section>
       <maplegend />
     </div>
-    <!-- Widget Pane -->
+    <!-- Widget Panel -->
     <transition name="fade-transform" mode="out-in">
-      <router-view :key="key" @search="updataMapData($event,userDefined)" />
+      <router-view
+        :key="key"
+        @search="updataMapData($event,userDefined)"
+        @polygon="polygonOperation($event,userDefined)"
+      />
     </transition>
   </div>
 </template>
@@ -71,7 +96,7 @@
 import { Navbar, Sidebar, Maplegend } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import http from '@/utils/http'
-
+var drawingManager
 export default {
   name: 'Layout',
   components: {
@@ -85,7 +110,6 @@ export default {
       topMarkers: [],
       bottomMarkers: [],
       paths: [],
-      icon: 'icon/red-circle.png',
       infoPosition: null,
       infoCurrentKey: null,
       infoOpened: false,
@@ -101,7 +125,13 @@ export default {
         status: null,
         type: null
       },
-      userDefined: ''
+      userDefined: '',
+      polygons: [],
+      topMarkersIcon: [],
+      bottomMarkersIcon: [],
+      topMarkerNum: null,
+      bottomMarkerNum: null,
+      update: true
     }
   },
   computed: {
@@ -131,24 +161,18 @@ export default {
   },
   methods: {
     init() {
-      var that = this
-      // http.get('/getWellsTopPoint')
-      //   .then(function(response) {
-      //     that.topMarkers = response.data
-      //   })
-      // http.get('/getWellsBottomPoint')
-      //   .then(function(response) {
-      //     that.bottomMarkers = response.data
-      //   })
-      // http.get('/getWellsPath')
-      //   .then(function(response) {
-      //     that.paths = response.data
-      //   })
+      var self = this
       http.get('/initMapData')
         .then(function(response) {
-          that.topMarkers = response.data.topPoint
-          that.bottomMarkers = response.data.bottomPoint
-          that.paths = response.data.path
+          self.topMarkerNum = response.data.topPoint.length
+          // topMarkersIcon数组用来存储marker当前状态，不同状态对应不同的icon
+          self.topMarkersIcon = Array(self.topMarkerNum).fill({ url: require('./icon/top-red-marker.png') })
+          self.bottomMarkerNum = response.data.bottomPoint.length
+          // bottomMarkersIcon数组用来存储marker当前状态，不同状态对应不同的icon
+          self.bottomMarkersIcon = Array(self.bottomMarkerNum).fill({ url: require('./icon/red-pin-smaller.png') })
+          self.topMarkers = response.data.topPoint
+          self.bottomMarkers = response.data.bottomPoint
+          self.paths = response.data.path
         })
     },
     handleClickOutside() {
@@ -177,7 +201,84 @@ export default {
       this.topMarkers = params.topPoint
       this.bottomMarkers = params.bottomPoint
       this.paths = params.path
+    },
+    createPolyDrawControl: function() {
+      var self = this
+      drawingManager = new window.google.maps.drawing.DrawingManager({
+        drawingControl: true,
+        drawingControlOptions: {
+          position: window.google.maps.ControlPosition.TOP_CENTER,
+          drawingModes: ['polygon']
+        },
+        polygonOptions: {
+          strokeWeight: 2,
+          editable: true
+        }
+      })
+      drawingManager.setMap(this.$refs.gmap.$mapObject)
+      window.google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
+        // Get overlay paths
+        const paths = event.overlay.getPaths().getArray()
+        // Remove overlay from map
+        event.overlay.setMap(null)
+
+        // Disable drawingManager
+        drawingManager.setDrawingMode(null)
+
+        // Create Polygon
+        self.polygons = paths
+        // self.savePolygon(paths)
+      })
+    },
+    delPolyDrawControl() {
+      drawingManager.setMap(null)
+    },
+    highlightWells() {
+      for (let i = 0; i < this.topMarkers.length; i++) {
+        var topPoint = new window.google.maps.LatLng(this.$refs.tMarker[i].position)
+        var topIsSelect = window.google.maps.geometry.poly.containsLocation(topPoint, this.$refs.polygon.$polygonObject)
+        if (topIsSelect) {
+          this.topMarkersIcon[i] = { url: require('./icon/top-light-blue-marker.png') }
+          this.bottomMarkersIcon[i] = { url: require('./icon/light-blue-pin-smaller.png') }
+        }
+      }
+      for (let i = 0; i < this.bottomMarkers.length; i++) {
+        var bottomPoint = new window.google.maps.LatLng(this.$refs.bMarker[i].position)
+        var bottomIsSelect = window.google.maps.geometry.poly.containsLocation(bottomPoint, this.$refs.polygon.$polygonObject)
+        if (bottomIsSelect) {
+          this.topMarkersIcon[i] = { url: require('./icon/top-light-blue-marker.png') }
+          this.bottomMarkersIcon[i] = { url: require('./icon/light-blue-pin-smaller.png') }
+        }
+      }
+      this.update = false
+      this.update = true
+    },
+    clearHighlightWells() {
+      for (let i = 0; i < this.topMarkers.length; i++) {
+        this.topMarkersIcon[i] = { url: require('./icon/top-red-marker.png') }
+        this.bottomMarkersIcon[i] = { url: require('./icon/red-pin-smaller.png') }
+      }
+      this.update = false
+      this.update = true
+    },
+    polygonOperation(params) {
+      switch (params) {
+        case 1:
+          this.createPolyDrawControl()
+          break
+        case 2:
+          this.delPolyDrawControl()
+          break
+        case 3:
+          this.highlightWells()
+          break
+        case 4:
+          this.clearHighlightWells()
+          break
+      }
     }
+    // selectWells() {
+    // }
   }
 }
 </script>
@@ -243,13 +344,13 @@ export default {
     width: 100%;
     height: calc(100vh - 50px);
 }
-.label-title{
-  font-size: 16px;
-  font-weight: 500;
-  margin-top: 10px;
-  color:black;
+.label-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 10px;
+    color: black;
 }
-.label-content{
-  font-size: 15px;
+.label-content {
+    font-size: 15px;
 }
 </style>

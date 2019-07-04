@@ -42,12 +42,12 @@
 
         <el-row>
           <el-col :span="24">
-            <el-button type="primary" plain style="width:250px;">Highlight wells</el-button>
+            <el-button type="primary" plain style="width:250px;" @click="highlight()">Highlight wells</el-button>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-button type="primary" plain style="width:250px;">Clear highlighted wells</el-button>
+            <el-button type="primary" plain style="width:250px;" @click="clearHighlight()">Clear highlighted wells</el-button>
           </el-col>
         </el-row>
         <el-row>
@@ -77,15 +77,32 @@
 </template>
 
 <script>
+// 1 stand for create drawing control
+// 2 stand for remove drawing control
+// 3 stand for highlight wells
+// 3 stand for clear highlight wells
+// 4 stand for select wells
+// 5 stand for remove wells
+// 6 stand for reset selection
 export default {
   data() {
     return {
       radio: '1'
     }
   },
+  created() {
+    this.$emit('polygon', 1)
+  },
   methods: {
     closeTab: function() {
+      this.$emit('polygon', 2)
       this.$router.replace({ path: '/home' })
+    },
+    highlight() {
+      this.$emit('polygon', 3)
+    },
+    clearHighlight() {
+      this.$emit('polygon', 4)
     }
   }
 }
