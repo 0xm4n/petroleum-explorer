@@ -12,7 +12,7 @@ module.exports = {
     }
     // 获取top点
     await db.Wells.findAll({
-      attributes: [['w_top_lng', 'lng'], ['w_top_lat', 'lat'], ['w_uwi', 'uwi'], ['w_operator', 'operator'], ['w_current_status', 'status'], ['w_type', 'type']]
+      attributes: [['w_top_lng', 'lng'], ['w_top_lat', 'lat'], ['w_uwi', 'uwi'], ['w_operator', 'operator'], ['w_current_status', 'status'], ['w_type', 'type'], ['w_class', 'class'], ['w_pad', 'pad']]
     }).then(well => {
       topPoint = JSON.stringify(well)
       topPoint = JSON.parse(topPoint)
@@ -20,7 +20,7 @@ module.exports = {
     })
     // 获取bottom点
     await db.Wells.findAll({
-      attributes: [['w_bottom_lng', 'lng'], ['w_bottom_lat', 'lat'], ['w_uwi', 'uwi'], ['w_operator', 'operator'], ['w_current_status', 'status'], ['w_type', 'type']]
+      attributes: [['w_bottom_lng', 'lng'], ['w_bottom_lat', 'lat'], ['w_uwi', 'uwi'], ['w_operator', 'operator'], ['w_current_status', 'status'], ['w_type', 'type'], ['w_class', 'class'], ['w_pad', 'pad']]
     }).then(well => {
       bottomPoint = JSON.stringify(well)
       bottomPoint = JSON.parse(bottomPoint)

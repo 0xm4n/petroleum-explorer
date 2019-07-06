@@ -2,12 +2,27 @@
   <div class="page-container">
 
     <div class="close-bar">
-      <span class="sub-title">Polygon Selection</span>
+      <span class="sub-title">Clustering</span>
       <img class="collapse-icon" src="@/icons/collapse.png" alt="collapse" @click="closeTab">
     </div>
 
     <div class="main-content">
-      Polygon Selection
+      <el-collapse v-model="activeCollapse" accordion>
+        <!-- K-means -->
+        <el-collapse-item name="1">
+          <template slot="title">
+            <span class="item-title">K-means</span>
+          </template>
+          <div class="expansion-content" style>
+            1
+          </div>
+          <el-button
+            type="primary"
+            plain
+            style="width:200px;margin-top:15px;"
+          >Apply</el-button>
+        </el-collapse-item>
+      </el-collapse>
     </div>
   </div>
 </template>
@@ -16,7 +31,7 @@
 export default {
   data() {
     return {
-
+      activeCollapse: '1'
     }
   },
   methods: {
@@ -66,7 +81,21 @@ font-size: 20px;
 
 .main-content{
   text-align: center;
-  margin-top: 15px;
+}
+.el-row {
+    width: 340px;
+    margin: 25px auto;
+}
+.item-title {
+    margin-left: 15px;
+    font-size: 16px;
+}
+
+.expansion-content {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
 }
 
 </style>

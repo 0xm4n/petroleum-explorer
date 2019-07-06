@@ -32,6 +32,7 @@
             type="primary"
             plain
             style="width:200px;margin-top:15px;"
+            @click="categoricalClassify()"
           >Apply</el-button>
         </el-collapse-item>
         <!-- Numerical -->
@@ -153,6 +154,9 @@ export default {
   methods: {
     closeTab: function() {
       this.$router.replace({ path: '/home' })
+    },
+    categoricalClassify: function() {
+      this.$emit('classification', this.categoryType)
     }
   }
 }
