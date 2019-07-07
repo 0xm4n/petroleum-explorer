@@ -81,6 +81,14 @@
 
       </section>
       <maplegend />
+      <transition name="fade" mode="in-out">
+        <classificationlegend
+          v-if="showLegend"
+          :category-type-arr="categoryTypeArr"
+          :catagory-type-num="catagoryTypeNum"
+          @close="closeLegend($event)"
+        />
+      </transition>
     </div>
     <!-- Widget Panel -->
     <transition name="fade-transform" mode="out-in">
@@ -97,7 +105,7 @@
 
 <script>
 import _ from 'lodash'
-import { Navbar, Sidebar, Maplegend } from './components'
+import { Navbar, Sidebar, Maplegend, Classificationlegend } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import polygonMixin from './mixin/polygonFunction'
 
@@ -108,7 +116,8 @@ export default {
   components: {
     Navbar,
     Sidebar,
-    Maplegend
+    Maplegend,
+    Classificationlegend
   },
   mixins: [ResizeMixin, polygonMixin],
   data() {
@@ -136,7 +145,10 @@ export default {
       topMarkersIcon: [],
       bottomMarkersIcon: [],
       update: true,
-      url: ''
+      url: '',
+      categoryTypeArr: [],
+      catagoryTypeNum: null,
+      showLegend: false
     }
   },
   computed: {
@@ -258,35 +270,25 @@ export default {
       }
     },
     classifyWells(cataType) {
-      var categoryTypeArr = _.map(this.topMarkers, cataType)
-      categoryTypeArr = _.uniq(categoryTypeArr)
-      var catagoryTypeNum = categoryTypeArr.length
+      this.showLegend = false
+      this.categoryTypeArr = _.map(this.topMarkers, cataType)
+      this.categoryTypeArr = _.uniq(this.categoryTypeArr)
+      this.catagoryTypeNum = this.categoryTypeArr.length
       for (let i = 0; i < this.topMarkerNum; i++) {
         var point = this.topMarkers[i]
-        for (let j = 0; j < catagoryTypeNum; j++) {
-          if (point[cataType] === categoryTypeArr[j]) {
+        for (let j = 0; j < this.catagoryTypeNum; j++) {
+          if (point[cataType] === this.categoryTypeArr[j]) {
             this.topMarkersIcon[i] = { url: require('@/icons/marker/marker-type' + (j + 1).toString() + '.png') }
             this.bottomMarkersIcon[i] = { url: require('@/icons/pin/pin-type' + (j + 1).toString() + '.png') }
           }
         }
       }
-      var htmlMsg = ''
-      for (let i = 0; i < catagoryTypeNum; i++) {
-        var htmlImg = '<div><img src="' + '/icons/marker/marker-type' + (i + 1).toString() + '.png' + '"/>'
-        var htmlText = '<span>' + categoryTypeArr[i] + '</span></div>'
-        htmlMsg += (htmlImg)
-        htmlMsg += (htmlText)
-      }
-      console.log(htmlMsg)
       this.update = false
       this.update = true
-      this.$notify.info({
-        title: 'Categorical Classification',
-        dangerouslyUseHTMLString: true,
-        message: '<el-image src="../icons/pin/pin-type10.png"/>',
-        position: 'bottom-right',
-        duration: 0
-      })
+      this.showLegend = true
+    },
+    closeLegend() {
+      this.showLegend = false
     }
   }
 }
