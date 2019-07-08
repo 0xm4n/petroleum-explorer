@@ -2,12 +2,12 @@
   <div class="page-container">
 
     <div class="close-bar">
-      <span class="sub-title">Polygon Selection</span>
+      <span class="sub-title">Association Rule Mining</span>
       <img class="collapse-icon" src="@/icons/collapse.png" alt="collapse" @click="closeTab">
     </div>
 
     <div class="main-content">
-      Polygon Selection
+      Association Rule Mining
     </div>
   </div>
 </template>

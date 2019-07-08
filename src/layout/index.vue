@@ -86,6 +86,7 @@
           v-if="showLegend"
           :category-type-arr="categoryTypeArr"
           :catagory-type-num="catagoryTypeNum"
+          :legend-title="legendTitle"
           @close="closeLegend($event)"
         />
       </transition>
@@ -104,10 +105,10 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import { Navbar, Sidebar, Maplegend, Classificationlegend } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import polygonMixin from './mixin/polygonFunction'
+import classifyMixin from './mixin/classifyFunction'
 
 import http from '@/utils/http'
 
@@ -119,7 +120,7 @@ export default {
     Maplegend,
     Classificationlegend
   },
-  mixins: [ResizeMixin, polygonMixin],
+  mixins: [ResizeMixin, polygonMixin, classifyMixin],
   data() {
     return {
       topMarkers: [],
@@ -148,7 +149,8 @@ export default {
       url: '',
       categoryTypeArr: [],
       catagoryTypeNum: null,
-      showLegend: false
+      showLegend: false,
+      legendTitle: null
     }
   },
   computed: {
@@ -251,45 +253,40 @@ export default {
           break
       }
     },
-    classification(params, categoryType) {
+    classification(params, categoryType, classNum) {
       switch (categoryType) {
         case 'Well Class':
-          this.classifyWells('class')
+          this.categoricalClassify('class')
           break
         case 'Well Current Status':
-          this.classifyWells('status')
+          this.categoricalClassify('status')
           break
         case 'Well Type':
-          this.classifyWells('type')
+          this.categoricalClassify('type')
           break
         case 'Pad':
-          this.classifyWells('pad')
+          this.categoricalClassify('pad')
+          break
+        case 'Average Injection Hours':
+          this.numericalClassify('Average Injection Hours', classNum)
+          break
+        case 'Average Oil Production':
+          this.numericalClassify('Average Oil Production', classNum)
+          break
+        case 'Average SOR':
+          this.numericalClassify('Average SOR', classNum)
+          break
+        case 'Average Steam Injection':
+          this.numericalClassify('Average Steam Injection', classNum)
+          break
+        case 'Well Drillers Total Depth':
+          this.numericalClassify('Well Drillers Total Depth', classNum)
           break
         default:
           break
       }
-    },
-    classifyWells(cataType) {
-      this.showLegend = false
-      this.categoryTypeArr = _.map(this.topMarkers, cataType)
-      this.categoryTypeArr = _.uniq(this.categoryTypeArr)
-      this.catagoryTypeNum = this.categoryTypeArr.length
-      for (let i = 0; i < this.topMarkerNum; i++) {
-        var point = this.topMarkers[i]
-        for (let j = 0; j < this.catagoryTypeNum; j++) {
-          if (point[cataType] === this.categoryTypeArr[j]) {
-            this.topMarkersIcon[i] = { url: require('@/icons/marker/marker-type' + (j + 1).toString() + '.png') }
-            this.bottomMarkersIcon[i] = { url: require('@/icons/pin/pin-type' + (j + 1).toString() + '.png') }
-          }
-        }
-      }
-      this.update = false
-      this.update = true
-      this.showLegend = true
-    },
-    closeLegend() {
-      this.showLegend = false
     }
+
   }
 }
 </script>

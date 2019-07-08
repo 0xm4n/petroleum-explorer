@@ -7,10 +7,14 @@
     </div>
 
     <div class="main-content">
-      <Collapse v-model="value" accordion>
-        <Panel name="1">
-          <span class="item-title">Bar Chart</span>
-          <p slot="content">
+      <el-collapse v-model="activeCollapse" accordion>
+
+        <!-- Bar Chart -->
+        <el-collapse-item name="1">
+          <template slot="title">
+            <span class="item-title">Bar Chart</span>
+          </template>
+          <div class="expansion-content" style>
             <el-select v-model="value1" placeholder="Select a chart">
               <el-option
                 v-for="item in barChartOptions"
@@ -19,11 +23,20 @@
                 :value="item.value"
               />
             </el-select>
-          </p>
-        </Panel>
-        <Panel name="2">
-          <span class="item-title">Pie Chart</span>
-          <p slot="content">
+          </div>
+          <el-button
+            type="primary"
+            plain
+            style="width:200px;margin-top:15px;"
+          >Apply</el-button>
+        </el-collapse-item>
+
+        <!-- Pie Chart -->
+        <el-collapse-item name="2">
+          <template slot="title">
+            <span class="item-title">Pie Chart</span>
+          </template>
+          <div class="expansion-content" style>
             <el-select v-model="value2" placeholder="Select a chart">
               <el-option
                 v-for="item in pieChartOptions"
@@ -32,11 +45,20 @@
                 :value="item.value"
               />
             </el-select>
-          </p>
-        </Panel>
-        <Panel name="3">
-          <span class="item-title">Time Series</span>
-          <p slot="content">
+          </div>
+          <el-button
+            type="primary"
+            plain
+            style="width:200px;"
+          >Apply</el-button>
+        </el-collapse-item>
+
+        <!-- Time Series -->
+        <el-collapse-item name="3">
+          <template slot="title">
+            <span class="item-title">Time Series</span>
+          </template>
+          <div class="expansion-content" style>
             <span style="font-size:15px;">Unique Well Identifier</span>
 
             <el-input v-model="input" placeholder="" style="margin:10px 0;" />
@@ -49,14 +71,15 @@
                 :value="item.value"
               />
             </el-select>
-          </p>
+          </div>
+          <el-button
+            type="primary"
+            plain
+            style="width:200px;"
+          >Apply</el-button>
+        </el-collapse-item>
+      </el-collapse>
 
-        </Panel>
-      </Collapse>
-      <div style="text-align:center;margin-top:15px;">
-        <el-button type="primary" plain style="width:250px;">Apply</el-button>
-
-      </div>
     </div>
   </div>
 </template>
@@ -65,6 +88,7 @@
 export default {
   data() {
     return {
+      activeCollapse: '1',
       vaule: '',
       value1: '',
       value2: '',
@@ -183,14 +207,18 @@ font-size: 20px;
 }
 
 .main-content{
-
+  text-align: center;
 }
 
 .item-title {
+    margin-left: 15px;
     font-size: 16px;
 }
 
-p {
-  text-align: center;
+.expansion-content {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    // margin-top: 10px;
 }
 </style>

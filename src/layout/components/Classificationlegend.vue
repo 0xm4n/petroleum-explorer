@@ -5,7 +5,7 @@
       <h2
         class="el-notification__title"
         style="display:inline-block;margin-left:10px;position:relative;bottom:3px;margin-right:25px;"
-      >Categorical Classification</h2>
+      >{{ legendTitle }}</h2>
       <i class="el-notification__closeBtn el-icon-close" @click="closeLegend()" />
 
       <div class="legend-content">
@@ -32,15 +32,29 @@ export default {
       default: () => {
         return 0
       }
+    },
+    legendTitle: {
+      type: String,
+      default: () => {
+        return ''
+      }
     }
   },
   computed: {
     lengendArr() {
       var tempArr = []
       for (let i = 0; i < this.catagoryTypeNum; i++) {
-        var temp = {
-          iconSrc: require('@/icons/pin/pin-type' + (i + 1).toString() + '.png'),
-          iconTitle: this.categoryTypeArr[i]
+        var temp
+        if (this.categoryTypeArr[i] === 'invaild') {
+          temp = {
+            iconSrc: require('@/icons/pin/pin-type10.png'),
+            iconTitle: this.categoryTypeArr[i]
+          }
+        } else {
+          temp = {
+            iconSrc: require('@/icons/pin/pin-type' + (i + 1).toString() + '.png'),
+            iconTitle: this.categoryTypeArr[i]
+          }
         }
         tempArr = tempArr.concat(temp)
       }

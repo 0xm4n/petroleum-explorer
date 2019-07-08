@@ -14,8 +14,41 @@
             <span class="item-title">K-means</span>
           </template>
           <div class="expansion-content" style>
-            1
+            <el-checkbox-group v-model="checkList">
+              <el-row>
+                <el-col :span="12">
+                  <el-checkbox label="Drillers Depth" />
+                </el-col>
+                <el-col :span="12">
+                  <el-checkbox label="Injection Hours" />
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="12">
+                  <el-checkbox label="Location" />
+                </el-col>
+                <el-col :span="12">
+                  <el-checkbox label="Oil Production" />
+                </el-col>
+              </el-row><el-row>
+                <el-col :span="12">
+                  <el-checkbox label="SOR" />
+                </el-col>
+                <el-col :span="12">
+                  <el-checkbox label="Steam Injection" />
+                </el-col>
+              </el-row>
+            </el-checkbox-group>
           </div>
+          <el-divider />
+          <el-select v-model="value" placeholder="Number of clusters">
+            <el-option
+              v-for="item in clusterNum"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
           <el-button
             type="primary"
             plain
@@ -31,7 +64,43 @@
 export default {
   data() {
     return {
-      activeCollapse: '1'
+      activeCollapse: '1',
+      checkList: [],
+      clusterNum: [
+        {
+          value: '2',
+          label: '2'
+        },
+        {
+          value: '3',
+          label: '3'
+        },
+        {
+          value: '4',
+          label: '4'
+        },
+        {
+          value: '5',
+          label: '5'
+        },
+        {
+          value: '6',
+          label: '6'
+        },
+        {
+          value: '7',
+          label: '7'
+        },
+        {
+          value: '8',
+          label: '8'
+        },
+        {
+          value: '9',
+          label: '9'
+        }
+      ],
+      value: ''
     }
   },
   methods: {
@@ -84,7 +153,6 @@ font-size: 20px;
 }
 .el-row {
     width: 340px;
-    margin: 25px auto;
 }
 .item-title {
     margin-left: 15px;
@@ -95,7 +163,11 @@ font-size: 20px;
     height: 100%;
     width: 100%;
     text-align: center;
-    margin-top: 10px;
+    // margin-top: 10px;
+}
+.el-col {
+  text-align: left;
+  padding-left: 20px;
 }
 
 </style>

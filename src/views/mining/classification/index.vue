@@ -43,7 +43,7 @@
           <div class="expansion-content" style>
             <el-select
               v-model="numericalType"
-              placeholder="Select classification type"
+              placeholder="Select Classification Type"
               size="medium"
               style="width: 250px;"
             >
@@ -57,7 +57,7 @@
             <el-row>
               <el-col :span="24">
                 <el-select
-                  v-model="numericalType"
+                  v-model="classNum"
                   placeholder="Select Class Number"
                   size="medium"
                   style="width:250px;"
@@ -83,6 +83,7 @@
             type="primary"
             plain
             style="width:200px;"
+            @click="numericalClassify()"
           >Apply</el-button>
         </el-collapse-item>
       </el-collapse>
@@ -91,12 +92,14 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
-      activeCollapse: '1',
+      activeCollapse: '2',
       categoryType: '',
       numericalType: '',
+      classNum: '',
       numericalRadio: '1',
       categoryOptions: [
         {
@@ -133,10 +136,6 @@ export default {
       ],
       classOptions: [
         {
-          value: '1',
-          label: '1'
-        },
-        {
           value: '2',
           label: '2'
         },
@@ -147,6 +146,26 @@ export default {
         {
           value: '4',
           label: '4'
+        },
+        {
+          value: '5',
+          label: '5'
+        },
+        {
+          value: '6',
+          label: '6'
+        },
+        {
+          value: '7',
+          label: '7'
+        },
+        {
+          value: '8',
+          label: '8'
+        },
+        {
+          value: '9',
+          label: '9'
         }
       ]
     }
@@ -157,6 +176,9 @@ export default {
     },
     categoricalClassify: function() {
       this.$emit('classification', this.categoryType)
+    },
+    numericalClassify: function() {
+      this.$emit('classification', this.numericalType, this.classNum)
     }
   }
 }
