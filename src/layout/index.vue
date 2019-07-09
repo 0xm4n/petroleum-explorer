@@ -98,6 +98,7 @@
         @search="updataMapData($event)"
         @polygon="polygonOperation($event)"
         @classification="classification($event, ...arguments)"
+        @clustering="clustering($event, ...arguments)"
       />
     </transition>
 
@@ -111,6 +112,7 @@ import polygonMixin from './mixin/polygonFunction'
 import classifyMixin from './mixin/classifyFunction'
 
 import http from '@/utils/http'
+var qs = require('qs')
 
 export default {
   name: 'Layout',
@@ -285,6 +287,36 @@ export default {
         default:
           break
       }
+    },
+    clustering(params, checkList, clusterNum) {
+      var self = this
+      this.legendTitle = 'Cluster K-means'
+      http.get('/clusterKmeans',
+        {
+          params: {
+            'checkList': checkList,
+            'clusterNum': parseInt(clusterNum)
+          },
+          'paramsSerializer': function(params) {
+            return qs.stringify(params, { arrayFormat: 'repeat' })
+          }
+        }
+      ).then(function(response) {
+        self.categoryTypeArr = response.data.categoryTypeArr
+        self.catagoryTypeNum = response.data.categoryTypeArr.length
+        for (let i = 0; i < self.topMarkerNum; i++) {
+          var point = response.data.points[i]
+          for (let j = 0; j < self.catagoryTypeNum; j++) {
+            if (point['label'] === self.categoryTypeArr[j]) {
+              self.topMarkersIcon[i] = { url: require('@/icons/marker/marker-type' + (j + 1).toString() + '.png') }
+              self.bottomMarkersIcon[i] = { url: require('@/icons/pin/pin-type' + (j + 1).toString() + '.png') }
+            }
+          }
+        }
+        self.update = false
+        self.update = true
+        self.showLegend = true
+      })
     }
 
   }

@@ -41,9 +41,9 @@
             </el-checkbox-group>
           </div>
           <el-divider />
-          <el-select v-model="value" placeholder="Number of clusters">
+          <el-select v-model="clusterNum" placeholder="Number of clusters">
             <el-option
-              v-for="item in clusterNum"
+              v-for="item in clusterNumOption"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -53,6 +53,7 @@
             type="primary"
             plain
             style="width:200px;margin-top:15px;"
+            @click="applyClustering()"
           >Apply</el-button>
         </el-collapse-item>
       </el-collapse>
@@ -66,7 +67,7 @@ export default {
     return {
       activeCollapse: '1',
       checkList: [],
-      clusterNum: [
+      clusterNumOption: [
         {
           value: '2',
           label: '2'
@@ -100,12 +101,15 @@ export default {
           label: '9'
         }
       ],
-      value: ''
+      clusterNum: ''
     }
   },
   methods: {
     closeTab: function() {
       this.$router.replace({ path: '/home' })
+    },
+    applyClustering: function() {
+      this.$emit('clustering', this.checkList, this.clusterNum)
     }
   }
 }
