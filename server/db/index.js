@@ -8,7 +8,6 @@ var db = new Sequelize(config.database, config.username, config.password, {
     timestamps: false
   }
 })
-
 db.Wells = db.import('./models/wells.js')
 db.Statistics = db.import('./models/statistics.js')
 

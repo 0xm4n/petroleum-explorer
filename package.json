@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "axios": "0.18.0",
+    "echarts": "^4.2.1",
     "element-ui": "^2.10.1",
     "iview": "^3.4.2",
     "js-cookie": "2.2.0",
@@ -25,6 +26,7 @@
     "path-to-regexp": "2.4.0",
     "qs": "^6.7.0",
     "vue": "2.6.10",
+    "vue-echarts": "^4.0.3",
     "vue-router": "3.0.6",
     "vue2-google-maps": "^0.10.6",
     "vuex": "3.1.0"

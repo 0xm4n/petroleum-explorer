@@ -135,11 +135,11 @@ module.exports = {
     response.points = _.times(wellsNum, (index) => {
       return {
         'wid': index + 1,
-        'label': ans[index]
+        'label': 'Cluster' + ans[index]
       }
     })
     response.categoryTypeArr = _.times(clusterNum, (index) => {
-      return index
+      return 'Cluster' + index
     })
     ctx.response.body = response
   }

@@ -5,9 +5,12 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
-import iView from 'iview'
-import 'iview/dist/styles/iview.css'
-import localeVue from 'iview/dist/locale/en-US'
+// import iView from 'iview'
+// import 'iview/dist/styles/iview.css'
+// import localeVue from 'iview/dist/locale/en-US'
+import ECharts from 'vue-echarts'
+import 'echarts/lib/chart/bar'
+import 'echarts/lib/component/tooltip'
 
 import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
@@ -34,9 +37,10 @@ import { mockXHR } from '../mock'
 if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
-Vue.use(iView, { localeVue })
+// Vue.use(iView, { localeVue })
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
+Vue.component('v-chart', ECharts)
 
 Vue.use(VueGoogleMaps, {
   load: {

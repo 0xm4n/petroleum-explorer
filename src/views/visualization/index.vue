@@ -14,8 +14,8 @@
           <template slot="title">
             <span class="item-title">Bar Chart</span>
           </template>
-          <div class="expansion-content" style>
-            <el-select v-model="value1" placeholder="Select a chart">
+          <div class="expansion-content">
+            <el-select v-model="barChartType" placeholder="Select a chart" style="width:250px;">
               <el-option
                 v-for="item in barChartOptions"
                 :key="item.value"
@@ -28,6 +28,7 @@
             type="primary"
             plain
             style="width:200px;margin-top:15px;"
+            @click="showBarChart()"
           >Apply</el-button>
         </el-collapse-item>
 
@@ -36,8 +37,8 @@
           <template slot="title">
             <span class="item-title">Pie Chart</span>
           </template>
-          <div class="expansion-content" style>
-            <el-select v-model="value2" placeholder="Select a chart">
+          <div class="expansion-content">
+            <el-select v-model="pieChartType" placeholder="Select a chart" style="width:250px;">
               <el-option
                 v-for="item in pieChartOptions"
                 :key="item.value"
@@ -49,12 +50,13 @@
           <el-button
             type="primary"
             plain
-            style="width:200px;"
+            style="width:200px;margin-top:15px;"
+            @click="showPieChart()"
           >Apply</el-button>
         </el-collapse-item>
 
         <!-- Time Series -->
-        <el-collapse-item name="3">
+        <!-- <el-collapse-item name="3">
           <template slot="title">
             <span class="item-title">Time Series</span>
           </template>
@@ -65,7 +67,7 @@
 
             <el-select v-model="value3" placeholder="" style="width:100%;margin:10px 0;">
               <el-option
-                v-for="item in options"
+                v-for="item in typeOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -77,71 +79,104 @@
             plain
             style="width:200px;"
           >Apply</el-button>
-        </el-collapse-item>
+        </el-collapse-item> -->
       </el-collapse>
 
+      <!-- Bar Chart dialog -->
+      <el-dialog
+        title="Bar Chart"
+        :visible.sync="barChartDialogVisible"
+        width="46%"
+        :modal-append-to-body="false"
+      >
+        <v-chart :options="option" />
+        <span slot="footer" class="dialog-footer">
+          <!-- <el-button @click="barChartDialogVisible = false">Cancel</el-button> -->
+          <el-button type="primary" @click="barChartDialogVisible = false">Close</el-button>
+        </span>
+      </el-dialog>
+
+      <!-- Pie Chart dialog -->
+      <el-dialog
+        title=""
+        :visible.sync="pieChartDialogVisible"
+        width="46%"
+        :modal-append-to-body="false"
+      >
+        <v-chart :options="pieOption" />
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="pieChartDialogVisible = false">Close</el-button>
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
+import ECharts from 'vue-echarts'
+import http from '@/utils/http'
+var echarts = require('echarts')
 export default {
+  components: {
+    'v-chart': ECharts
+  },
   data() {
     return {
       activeCollapse: '1',
-      vaule: '',
-      value1: '',
-      value2: '',
+      barChartType: '',
+      pieChartType: '',
       value3: '',
+      barXvalue: [],
+      barYvalue: [],
       barChartOptions: [
         {
-          value: '1',
+          value: 'Average Injection Hours',
           label: 'Average Injection Hours'
         },
         {
-          value: '2',
+          value: 'Average Oil Production',
           label: 'Average Oil Production'
         },
         {
-          value: '3',
+          value: 'Average SOR',
           label: 'Average SOR'
         },
         {
-          value: '4',
+          value: 'Average Steam Injection',
           label: 'Average Steam Injection'
         },
         {
-          value: '5',
+          value: 'Well Drillers Total Depth',
           label: 'Well Drillers Total Depth'
         }
       ],
       pieChartOptions: [
         {
-          value: '1',
+          value: 'Well Class',
           label: 'Well Class'
         },
         {
-          value: '2',
+          value: 'Well Current Status',
           label: 'Well Current Status'
         },
         {
-          value: '3',
+          value: 'Well Operator',
           label: 'Well Operator'
         },
         {
-          value: '4',
+          value: 'Well Province',
           label: 'Well Province'
         },
         {
-          value: '5',
+          value: 'Well Type',
           label: 'Well Type'
         },
         {
-          value: '6',
+          value: 'Pad',
           label: 'Pad'
         }
       ],
-      options: [
+      typeOptions: [
         {
           value: '选项1',
           label: 'Injection'
@@ -158,12 +193,154 @@ export default {
           value: '选项4',
           label: 'Well Status'
         }
-      ]
+      ],
+      barChartDialogVisible: false,
+      pieChartDialogVisible: false,
+      option: {},
+      pieData: {
+        value: [
+          { value: 227, name: 'DEVELOPMENT' },
+          { value: 74, name: 'DEVELOPMENT SERVICE' }
+        ],
+        label: ['DEVELOPMENT', 'DEVELOPMENT SERVICE']
+      },
+      pieOption: {}
     }
   },
   methods: {
     closeTab: function() {
       this.$router.replace({ path: '/home' })
+    },
+    showBarChart: function() {
+      var self = this
+      http.get('/getBarChart',
+        {
+          params: {
+            type: self.barChartType
+          }
+        })
+        .then(function(response) {
+          self.barXvalue = response.data.valueData
+          self.barYvalue = response.data.categoryData
+          self.barChartDialogVisible = true
+          self.option = {
+            title: {
+              text: self.barChartType,
+              left: 10
+            },
+            toolbox: {
+              feature: {
+                saveAsImage: {
+                  pixelRatio: 2,
+                  title: 'Save'
+                }
+              }
+            },
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                type: 'shadow'
+              },
+              formatter: function(params) {
+                var res = '<b>' + self.barChartType + '</b>' +
+                 '<div>' + params[0].value + '</div>' +
+                 '<div style="text-align:left">UWI</div>' +
+                 '<div style="text-align:left;margin-left:15px;">' + params[0].data.uwi + '</div>' +
+                 '<div style="text-align:left">Well Operator</div>' +
+                 '<div style="text-align:left;margin-left:15px;">' + params[0].data.operator + '</div>' +
+                 '<div style="text-align:left">Well Status</div>' +
+                 '<div style="text-align:left;margin-left:15px;">' + params[0].data.status
+                return res
+              }
+            },
+            grid: {
+              bottom: 90
+            },
+            dataZoom: [{
+              type: 'inside'
+            }, {
+              type: 'slider'
+            }],
+            xAxis: {
+              name: 'wid',
+              type: 'category',
+              silent: false,
+              splitLine: {
+                show: false
+              },
+              splitArea: {
+                show: false
+              },
+              data: self.barXvalue
+            },
+            yAxis: {
+              type: 'value',
+              splitArea: {
+                show: false
+              }
+            },
+            series: [{
+              data: self.barYvalue,
+              type: 'bar',
+              large: true
+            }]
+          }
+        })
+    },
+    showPieChart: function() {
+      var self = this
+      http.get('/getPieChart',
+        {
+          params: {
+            type: self.pieChartType
+          }
+        }
+      )
+        .then(function(response) {
+          self.pieData.value = response.data.value
+          self.pieData.label = response.data.label
+          self.pieChartDialogVisible = true
+          self.pieOption = {
+            title: {
+              text: 'Pie Chart',
+              subtext: self.pieChartType,
+              x: 'center'
+            },
+            toolbox: {
+              feature: {
+                saveAsImage: {
+                  pixelRatio: 2,
+                  title: 'Save'
+                }
+              }
+            },
+            tooltip: {
+              trigger: 'item',
+              formatter: '{a} <br/>{b} : {c} ({d}%)'
+            },
+            legend: {
+              orient: 'vertical',
+              left: 'left',
+              data: self.pieData.label
+            },
+            series: [
+              {
+                name: 'Well Class',
+                type: 'pie',
+                radius: '75%',
+                center: ['50%', '60%'],
+                data: self.pieData.value,
+                itemStyle: {
+                  emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                  }
+                }
+              }
+            ]
+          }
+        })
     }
   }
 }
@@ -221,4 +398,5 @@ font-size: 20px;
     text-align: center;
     // margin-top: 10px;
 }
+
 </style>
