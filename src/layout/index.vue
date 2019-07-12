@@ -21,6 +21,7 @@
           :zoom="13"
           map-type-id="terrain"
         >
+          <!-- info window -->
           <gmap-info-window
             :options="infoOptions"
             :position="infoPosition"
@@ -35,6 +36,7 @@
             <div class="label-content">{{ infoContent.status }}</div>
             <div class="label-title">Well Type</div>
             <div class="label-content">{{ infoContent.type }}</div>
+            <el-button type="primary" style="width: 200px;margin:12px 0;" plain @click="viewTimeSeries(infoContent.uwi)">Copy UWI</el-button>
           </gmap-info-window>
 
           <!-- marker -->
@@ -95,6 +97,7 @@
     <transition name="fade-transform" mode="out-in">
       <router-view
         :key="key"
+        :uwi="uwi"
         @search="updataMapData($event)"
         @polygon="polygonOperation($event)"
         @classification="classification($event, ...arguments)"
@@ -143,6 +146,7 @@ export default {
         status: null,
         type: null
       },
+      uwi: '',
       userDefined: '',
       polygons: [],
       topMarkersIcon: [],
@@ -317,6 +321,9 @@ export default {
         self.update = true
         self.showLegend = true
       })
+    },
+    viewTimeSeries(param) {
+      this.$store.dispatch('map/changeUWI', param)
     }
 
   }

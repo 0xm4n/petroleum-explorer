@@ -56,18 +56,18 @@
         </el-collapse-item>
 
         <!-- Time Series -->
-        <!-- <el-collapse-item name="3">
+        <el-collapse-item name="3">
           <template slot="title">
             <span class="item-title">Time Series</span>
           </template>
           <div class="expansion-content" style>
             <span style="font-size:15px;">Unique Well Identifier</span>
 
-            <el-input v-model="input" placeholder="" style="margin:10px 0;" />
+            <el-input v-model="uwi" placeholder="UWI" style="margin:10px 0;width:250px;" />
 
-            <el-select v-model="value3" placeholder="" style="width:100%;margin:10px 0;">
+            <el-select v-model="timeSeriesType" placeholder="choose data type" style="width:250px;margin:10px 0;">
               <el-option
-                v-for="item in typeOptions"
+                v-for="item in timeSeriesTypeOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -78,8 +78,9 @@
             type="primary"
             plain
             style="width:200px;"
+            @click="showTimeSeriesChart()"
           >Apply</el-button>
-        </el-collapse-item> -->
+        </el-collapse-item>
       </el-collapse>
 
       <!-- Bar Chart dialog -->
@@ -89,7 +90,7 @@
         width="46%"
         :modal-append-to-body="false"
       >
-        <v-chart :options="option" />
+        <v-chart :options="barOption" />
         <span slot="footer" class="dialog-footer">
           <!-- <el-button @click="barChartDialogVisible = false">Cancel</el-button> -->
           <el-button type="primary" @click="barChartDialogVisible = false">Close</el-button>
@@ -106,6 +107,19 @@
         <v-chart :options="pieOption" />
         <span slot="footer" class="dialog-footer">
           <el-button type="primary" @click="pieChartDialogVisible = false">Close</el-button>
+        </span>
+      </el-dialog>
+
+      <!-- Time Series dialog -->
+      <el-dialog
+        title=""
+        :visible.sync="timeSeriesDialogVisible"
+        width="60%"
+        :modal-append-to-body="false"
+      >
+        <v-chart :options="timeSeriesOption" style="width:100%;" />
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="timeSeriesDialogVisible = false">Close</el-button>
         </span>
       </el-dialog>
     </div>
@@ -125,9 +139,7 @@ export default {
       activeCollapse: '1',
       barChartType: '',
       pieChartType: '',
-      value3: '',
-      barXvalue: [],
-      barYvalue: [],
+      timeSeriesType: '',
       barChartOptions: [
         {
           value: 'Average Injection Hours',
@@ -176,40 +188,100 @@ export default {
           label: 'Pad'
         }
       ],
-      typeOptions: [
+      timeSeriesTypeOptions: [
         {
-          value: '选项1',
+          value: 'Injection',
           label: 'Injection'
         },
         {
-          value: '选项2',
+          value: 'Production',
           label: 'Production'
         },
         {
-          value: '选项3',
+          value: 'SOR',
           label: 'SOR'
         },
         {
-          value: '选项4',
+          value: 'Well Status',
           label: 'Well Status'
         }
       ],
       barChartDialogVisible: false,
       pieChartDialogVisible: false,
-      option: {},
+      timeSeriesDialogVisible: false,
+      barXvalue: [],
+      barYvalue: [],
       pieData: {
-        value: [
-          { value: 227, name: 'DEVELOPMENT' },
-          { value: 74, name: 'DEVELOPMENT SERVICE' }
-        ],
-        label: ['DEVELOPMENT', 'DEVELOPMENT SERVICE']
+        value: [],
+        label: []
       },
-      pieOption: {}
+      barOption: {},
+      pieOption: {},
+      timeSeriesOption: {},
+      timeSeriesData: {
+        label: []
+      }
+
+    }
+  },
+  computed: {
+    uwi: {
+      get() {
+        return this.$store.state.map.uwi
+      },
+      set(value) {
+        this.$store.dispatch('map/changeUWI', value)
+      }
+
+    },
+    timeSeriesLegend() {
+      var temp
+      if (this.timeSeriesType === 'Injection') {
+        temp = ['Hours', 'Steam']
+      } else if (this.timeSeriesType === 'Production') {
+        temp = ['Cumulative Gas', 'Cumulative Hours', 'Cumulative Oil Bitumen', 'Cumulative Water', 'Gas', 'Gas Fluid Ratio', 'Gas Oil Ratio', 'Hours', 'Oil', 'Oil Cut', 'Total Fluid', 'Water', 'Water Cut', 'Water Gas Ratio', 'Water Oil Ratio']
+      } else if (this.timeSeriesType === 'Injection') {
+        temp = ['Hours', 'Steam']
+      }
+      return temp
+    },
+    labelArr() {
+      var temp
+      if (this.timeSeriesType === 'Injection') {
+        temp = ['hourData', 'streamData']
+      } else if (this.timeSeriesType === 'Production') {
+        temp = ['cumulativeGas', 'cumulativeHours', 'cumulativeOilBitumen', 'cumulativeWater', 'gas', 'gasFluidRatio', 'gasOilRatio', 'hours', 'oil', 'oilCut', 'totalFluid', 'water', 'waterCut', 'waterGasRatio', 'waterOilRatio']
+      } else if (this.timeSeriesType === 'Injection') {
+        temp = ['Hours', 'Steam']
+      }
+      return temp
+    },
+    series() {
+      var arr = []
+      for (let i = 0; i < this.labelArr.length; i++) {
+        var dataType = this.labelArr[i]
+        var timeSeriesData = this.timeSeriesData
+        var temp = {
+          name: this.timeSeriesLegend[i],
+          type: 'line',
+          data: timeSeriesData[dataType]
+        }
+        arr[i] = temp
+      }
+      return arr
+    },
+    isProductionTimeSeries() {
+      if (this.timeSeriesType === 'Production') {
+        return true
+      } else return false
     }
   },
   methods: {
     closeTab: function() {
       this.$router.replace({ path: '/home' })
+    },
+    updateUWI: function(e) {
+      this.$store.dispatch('map/changeUWI', e.target.value)
     },
     showBarChart: function() {
       var self = this
@@ -223,12 +295,13 @@ export default {
           self.barXvalue = response.data.valueData
           self.barYvalue = response.data.categoryData
           self.barChartDialogVisible = true
-          self.option = {
+          self.barOption = {
             title: {
               text: self.barChartType,
               left: 10
             },
             toolbox: {
+              right: '6%',
               feature: {
                 saveAsImage: {
                   pixelRatio: 2,
@@ -307,6 +380,7 @@ export default {
               x: 'center'
             },
             toolbox: {
+              right: '6%',
               feature: {
                 saveAsImage: {
                   pixelRatio: 2,
@@ -314,13 +388,16 @@ export default {
                 }
               }
             },
+            grid: {
+              left: '90'
+            },
             tooltip: {
               trigger: 'item',
               formatter: '{a} <br/>{b} : {c} ({d}%)'
             },
             legend: {
               orient: 'vertical',
-              left: 'left',
+              left: 0,
               data: self.pieData.label
             },
             series: [
@@ -339,6 +416,64 @@ export default {
                 }
               }
             ]
+          }
+        })
+    },
+    showTimeSeriesChart: function() {
+      const self = this
+      http.get('/getTimeSeries',
+        {
+          params: {
+            uwi: self.uwi,
+            type: self.timeSeriesType
+          }
+        }
+      )
+        .then(function(response) {
+          self.timeSeriesData = response.data
+          self.timeSeriesDialogVisible = true
+          self.timeSeriesOption = {
+            title: {
+              text: 'Time Series',
+              subtext: self.timeSeriesType
+            },
+            tooltip: {
+              trigger: 'axis'
+            },
+            legend: {
+              data: self.timeSeriesLegend,
+              orient: 'vertical',
+              right: 'right',
+              top: 50
+            },
+            grid: {
+              left: '3%',
+              right: self.isProductionTimeSeries ? '25%' : '13%',
+              bottom: '12%',
+              containLabel: true
+            },
+            dataZoom: [{
+              type: 'inside'
+            }, {
+              type: 'slider'
+            }],
+            toolbox: {
+              right: self.isProductionTimeSeries ? '17%' : '6%',
+              feature: {
+                saveAsImage: {
+                  title: 'Save'
+                }
+              }
+            },
+            xAxis: {
+              type: 'category',
+              boundaryGap: false,
+              data: self.timeSeriesData.label
+            },
+            yAxis: {
+              type: 'value'
+            },
+            series: self.series
           }
         })
     }

@@ -96,7 +96,7 @@
 export default {
   data() {
     return {
-      activeCollapse: '2',
+      activeCollapse: '1',
       categoryType: '',
       numericalType: '',
       classNum: '',
