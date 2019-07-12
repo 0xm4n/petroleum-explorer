@@ -7,7 +7,7 @@
 
     <div class="main-content">
       <el-collapse v-model="activeName" accordion>
-        <!-- UWI搜索 -->
+        <!-- UWI Search -->
         <el-collapse-item name="1">
           <template slot="title">
             <span class="item-title">UWI</span>
@@ -22,7 +22,7 @@
             @click="searchByUWI"
           >Search</el-button>
         </el-collapse-item>
-        <!-- UWI Field搜索 -->
+        <!-- UWI Field Search -->
         <el-collapse-item name="2">
           <template slot="title">
             <span class="item-title">UWI Fields</span>
@@ -50,7 +50,7 @@
             <input v-model="uwiFieldInput.last" class="short-input" type="text" maxlength="1">
           </div>
         </el-collapse-item>
-        <!-- Company搜索 -->
+        <!-- Company Search -->
         <el-collapse-item title="Company" name="3">
           <template slot="title">
             <span class="item-title">Company</span>
@@ -59,7 +59,7 @@
             <el-input v-model="input" placeholder="Company Name" style="width:200px;" />
           </div>
         </el-collapse-item>
-        <!-- Status搜索 -->
+        <!-- Status Search -->
         <el-collapse-item title="Status" name="4">
           <template slot="title">
             <span class="item-title">Status</span>
@@ -85,7 +85,7 @@
             @click="searchByStatus"
           >Search</el-button>
         </el-collapse-item>
-        <!-- 日期搜索 -->
+        <!-- 日期 Search -->
         <el-collapse-item title="Production date" name="5">
           <template slot="title">
             <span class="item-title">Production Date</span>

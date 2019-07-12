@@ -36,7 +36,7 @@
             <div class="label-content">{{ infoContent.status }}</div>
             <div class="label-title">Well Type</div>
             <div class="label-content">{{ infoContent.type }}</div>
-            <el-button type="primary" style="width: 200px;margin:12px 0;" plain @click="viewTimeSeries(infoContent.uwi)">Copy UWI</el-button>
+            <el-button type="primary" style="width: 200px;margin:12px 0;" plain @click="setUWI(infoContent.uwi)">Copy UWI</el-button>
           </gmap-info-window>
 
           <!-- marker -->
@@ -322,7 +322,7 @@ export default {
         self.showLegend = true
       })
     },
-    viewTimeSeries(param) {
+    setUWI(param) {
       this.$store.dispatch('map/changeUWI', param)
     }
 

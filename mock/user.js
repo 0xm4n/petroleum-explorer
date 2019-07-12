@@ -12,7 +12,7 @@ const users = {
   'admin-token': {
     roles: ['admin'],
     introduction: 'I am a super administrator',
-    avatar: '',
+    avatar: 'http://cdn.onlinewebfonts.com/svg/img_508630.png',
     name: 'Super Admin'
   },
   'editor-token': {

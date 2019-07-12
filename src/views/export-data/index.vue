@@ -14,12 +14,12 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-input v-model="input" placeholder="(optional)" />
+          <el-input v-model="fileName" placeholder="(optional)" />
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-button type="primary" plain style="width:100%">Export</el-button>
+          <el-button type="primary" plain style="width:100%" @click="exportData">Export</el-button>
         </el-col>
       </el-row>
     </div>
@@ -27,16 +27,42 @@
 </template>
 
 <script>
+import XLSX from 'xlsx'
+import http from '@/utils/http'
+
 export default {
   name: 'Home',
   data() {
     return {
-      input: ''
+      fileName: '',
+      wellsData: []
     }
   },
   methods: {
     closeTab: function() {
       this.$router.replace({ path: '/home' })
+    },
+    exportData: function() {
+      const self = this
+      http.get('/getTableData',
+        {
+          params: {
+          }
+        }
+      )
+        .then(function(response) {
+          self.wellsData = response.data
+          var wellsWS = XLSX.utils.json_to_sheet(self.wellsData)
+          var wb = XLSX.utils.book_new()
+          XLSX.utils.book_append_sheet(wb, wellsWS, 'wells')
+          var outPutFileName
+          if (self.fileName === '') {
+            outPutFileName = 'wells.xlsx'
+          } else {
+            outPutFileName = self.fileName + '.xlsx'
+          }
+          XLSX.writeFile(wb, outPutFileName)
+        })
     }
   }
 }
