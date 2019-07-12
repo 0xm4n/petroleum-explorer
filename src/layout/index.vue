@@ -102,6 +102,7 @@
         @polygon="polygonOperation($event)"
         @classification="classification($event, ...arguments)"
         @clustering="clustering($event, ...arguments)"
+        @reset="init($event)"
       />
     </transition>
 
@@ -351,7 +352,7 @@ export default {
     top: 0;
     height: 100%;
     position: absolute;
-    z-index: 999;
+    z-index: 0;
 }
 
 .fixed-header {

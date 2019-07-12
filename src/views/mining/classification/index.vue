@@ -172,6 +172,7 @@ export default {
   },
   methods: {
     closeTab: function() {
+      this.$emit('reset')
       this.$router.replace({ path: '/home' })
     },
     categoricalClassify: function() {

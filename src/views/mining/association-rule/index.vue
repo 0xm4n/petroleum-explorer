@@ -7,7 +7,7 @@
     </div>
 
     <div class="main-content">
-      Association Rule Mining
+      <el-button type="primary" plain disabled style="width:200px;margin-top:20px;">Developing</el-button>
     </div>
   </div>
 </template>

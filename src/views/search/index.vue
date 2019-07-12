@@ -18,7 +18,7 @@
           <el-button
             type="primary"
             plain
-            style="width:200px;margin-top:30px;"
+            style="width:200px;margin-top:20px;"
             @click="searchByUWI"
           >Search</el-button>
         </el-collapse-item>
@@ -49,6 +49,8 @@
             /
             <input v-model="uwiFieldInput.last" class="short-input" type="text" maxlength="1">
           </div>
+          <el-button type="primary" plain disabled style="width:200px;margin-top:20px;">Developing</el-button>
+
         </el-collapse-item>
         <!-- Company Search -->
         <el-collapse-item title="Company" name="3">
@@ -57,6 +59,8 @@
           </template>
           <div class="expansion-content" style>
             <el-input v-model="input" placeholder="Company Name" style="width:200px;" />
+            <el-button type="primary" plain disabled style="width:200px;margin-top:20px;">Developing</el-button>
+
           </div>
         </el-collapse-item>
         <!-- Status Search -->
@@ -85,7 +89,7 @@
             @click="searchByStatus"
           >Search</el-button>
         </el-collapse-item>
-        <!-- 日期 Search -->
+        <!-- Date Search -->
         <el-collapse-item title="Production date" name="5">
           <template slot="title">
             <span class="item-title">Production Date</span>
@@ -98,11 +102,13 @@
               style="width:305px;"
             />
           </div>
+          <el-button type="primary" plain disabled style="width:200px;margin-top:20px;">Developing</el-button>
+
         </el-collapse-item>
       </el-collapse>
       <el-button
         type="info"
-        style="width:100px;margin-top:30px;"
+        style="width:150px;margin-top:20px;"
         @click="clearAll"
       >Clear all</el-button>
     </div>

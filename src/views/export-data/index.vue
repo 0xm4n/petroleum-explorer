@@ -19,7 +19,7 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-button type="primary" plain style="width:100%" @click="exportData">Export</el-button>
+          <el-button type="primary" plain style="width:150px;margin-top:10px;" @click="exportData">Export</el-button>
         </el-col>
       </el-row>
     </div>

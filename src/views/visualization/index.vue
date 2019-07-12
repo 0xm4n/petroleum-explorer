@@ -2,7 +2,7 @@
   <div class="page-container">
 
     <div class="close-bar">
-      <span class="sub-title">Data Visualizetion</span>
+      <span class="sub-title">Data Visualization</span>
       <img class="collapse-icon" src="@/icons/collapse.png" alt="collapse" @click="closeTab">
     </div>
 
