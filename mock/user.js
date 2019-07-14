@@ -13,13 +13,15 @@ const users = {
     roles: ['admin'],
     introduction: 'I am a super administrator',
     avatar: 'http://cdn.onlinewebfonts.com/svg/img_508630.png',
-    name: 'Super Admin'
+    name: 'Super Admin',
+    password: 'password'
   },
   'editor-token': {
     roles: ['editor'],
     introduction: 'I am an editor',
-    avatar: 'https://d38fgd7fmrcuct.cloudfront.net/1_3l3txsj3cwbus48uuwu1p.jpg',
-    name: 'Normal Editor'
+    avatar: 'http://cdn.onlinewebfonts.com/svg/img_508630.png',
+    name: 'Normal Editor',
+    password: 'password'
   }
 }
 
@@ -30,8 +32,12 @@ export default [
     type: 'post',
     response: config => {
       const { username } = config.body
-      const token = tokens[username]
+      const { password } = config.body
+      var token = tokens[username]
 
+      if (password !== users[token.token].password) {
+        token = false
+      }
       // mock error
       if (!token) {
         return {

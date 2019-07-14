@@ -13,7 +13,7 @@
             <span class="item-title">UWI</span>
           </template>
           <div class="expansion-content" style>
-            <el-input v-model="uwiInput" placeholder="UWI Code" style="width:200px;" />
+            <el-input v-model="uwi" placeholder="UWI Code" style="width:200px;" />
           </div>
           <el-button
             type="primary"
@@ -122,7 +122,6 @@ export default {
   data() {
     return {
       activeName: '1',
-      uwiInput: '',
       uwiFieldInput: {
         first: null,
         lsd: null,
@@ -161,8 +160,19 @@ export default {
       value1: ''
     }
   },
+  computed: {
+    uwi: {
+      get() {
+        return this.$store.state.map.uwi
+      },
+      set(value) {
+        this.$store.dispatch('map/changeUWI', value)
+      }
+    }
+  },
   methods: {
     closeTab: function() {
+      this.$store.dispatch('map/changeUWI', '')
       this.$router.replace({ path: '/home' })
     },
     searchByUWI: function() {
@@ -170,7 +180,7 @@ export default {
       http.get('/searchByUWI',
         {
           params: {
-            uwi: that.uwiInput
+            uwi: that.uwi
           }
         }
       )

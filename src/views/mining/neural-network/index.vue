@@ -70,9 +70,9 @@
       <el-container style="margin: 5px 30px;">
         <el-main>
           <div style="text-align:left;margin-bottom:5px;">Number of neurons</div>
-          <el-input v-model="neuronsNum" placeholder="Number of neurons" style="margin-bottom:8px;" />
+          <el-input v-model="neuronsNum" placeholder="Number of neurons" style="margin-bottom:8px;width:210px;" />
           <div style="text-align:left;margin-bottom:5px;">Activation Function</div>
-          <el-select v-model="activationFunction" placeholder="Select a activation function" style="margin-bottom:8px;width:225px;">
+          <el-select v-model="activationFunction" placeholder="Select a activation function" style="margin-bottom:8px;width:210px;">
             <el-option
               v-for="item in activationFuncOptions"
               :key="item.value"
@@ -111,7 +111,6 @@
               label="Activation"
             />
             <el-table-column
-              fixed="right"
               label="#"
               width="100"
             >
@@ -242,20 +241,7 @@ export default {
           label: 'Linear'
         }
       ],
-      networkLayout: [
-        {
-          neurons: 10,
-          activation: 'softmax'
-        },
-        {
-          neurons: 10,
-          activation: 'softmax'
-        },
-        {
-          neurons: 10,
-          activation: 'softmax'
-        }
-      ]
+      networkLayout: []
     }
   },
   methods: {
@@ -315,8 +301,12 @@ font-size: 20px;
 }
 
 .main-content{
+  width: 340px;
   text-align: center;
   margin-top: 15px;
+  max-height: calc(100vh - 65px);
+  overflow-y:visible;
+  overflow-x: hidden;
 }
 
 .input-label{

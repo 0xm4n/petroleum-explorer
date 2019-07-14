@@ -87,8 +87,9 @@
       <el-dialog
         title="Bar Chart"
         :visible.sync="barChartDialogVisible"
-        width="46%"
+        width="630px"
         :modal-append-to-body="false"
+        top="10vh"
       >
         <v-chart :options="barOption" />
         <span slot="footer" class="dialog-footer">
@@ -101,8 +102,9 @@
       <el-dialog
         title=""
         :visible.sync="pieChartDialogVisible"
-        width="46%"
+        width="630px"
         :modal-append-to-body="false"
+        top="10vh"
       >
         <v-chart :options="pieOption" />
         <span slot="footer" class="dialog-footer">
@@ -116,6 +118,7 @@
         :visible.sync="timeSeriesDialogVisible"
         width="60%"
         :modal-append-to-body="false"
+        top="10vh"
       >
         <v-chart :options="timeSeriesOption" style="width:100%;" />
         <span slot="footer" class="dialog-footer">
@@ -232,7 +235,6 @@ export default {
       set(value) {
         this.$store.dispatch('map/changeUWI', value)
       }
-
     },
     timeSeriesLegend() {
       var temp
@@ -278,6 +280,7 @@ export default {
   },
   methods: {
     closeTab: function() {
+      this.$store.dispatch('map/changeUWI', '')
       this.$router.replace({ path: '/home' })
     },
     updateUWI: function(e) {
