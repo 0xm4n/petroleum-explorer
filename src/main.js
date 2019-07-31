@@ -44,7 +44,7 @@ Vue.component('v-chart', ECharts)
 
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'AIzaSyAQCJKiVQSepN7rzxRz__ipfkLf8betIp0',
+    key: 'AIzaSyCG68vyNn557ApHCg6X3NwLq0NhWXQsnxg',
     language: 'en',
     libraries: 'places,drawing' // This is required if you use the Autocomplete plugin
     // OR: libraries: 'places,drawing'
