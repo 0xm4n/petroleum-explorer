@@ -251,7 +251,7 @@
       </el-collapse>
 
       <el-dialog
-        title="Result"
+        title="Prediction"
         :visible.sync="neuralNetworkDialogVisible"
         width="50%"
         :before-close="closeDialog"
@@ -261,7 +261,7 @@
         <!-- <el-input v-model="" :disabled="true"></el-input> -->
         <span class="pcc-label"> pcc:{{neuralNetworkData.pcc}} </span>
         <span class="rmse-label"> rmse:{{neuralNetworkData.rmse}} </span>
-        <v-chart :options="neuralNetworkOption" style="width:100%;" />
+        <v-chart v-loading="loading" :options="neuralNetworkOption" style="width:100%;" />
 
         <span slot="footer" class="dialog-footer">
           <el-button type="primary" @click="closeDialog">Close</el-button>
@@ -282,7 +282,7 @@ export default {
   data() {
     return {
       neuralNetworkDialogVisible: false,
-      activeCollapse: "1",
+      activeCollapse: "",
       lossFunction: "mean_squared_error",
       optimizer: "sgd",
       learningRate: "0.1",
@@ -401,7 +401,8 @@ export default {
           label: "Linear"
         }
       ],
-      networkLayout: []
+      networkLayout: [],
+      loading: true
     };
   },
   computed: {
@@ -459,6 +460,7 @@ export default {
 
     clickANN: function() {
       const self = this;
+      self.neuralNetworkDialogVisible = true;
       http
         .get("/runANN", {
           params: {
@@ -472,8 +474,7 @@ export default {
           }
         })
         .then(function(response) {
-          self.neuralNetworkData = response.data;
-          self.neuralNetworkDialogVisible = true;
+          self.neuralNetworkData = response.data
           self.neuralNetworkOption = {
             title: {
               text: "ANN"
@@ -518,13 +519,15 @@ export default {
               type: "value"
             },
             series: self.series
-          };
+          }
+          self.loading =false
         });
       
     },
 
     clickLSTM: function() {
       const self = this;
+      self.neuralNetworkDialogVisible = true
       http
         .get("/runLSTM", {
           params: {
@@ -538,8 +541,7 @@ export default {
           }
         })
         .then(function(response) {
-          self.neuralNetworkData = response.data;
-          self.neuralNetworkDialogVisible = true;
+          self.neuralNetworkData = response.data
           self.neuralNetworkOption = {
             title: {
               text: "LSTM"
@@ -584,7 +586,8 @@ export default {
               type: "value"
             },
             series: self.series
-          };
+          }
+          self.loading =false
         });
       
     },
@@ -677,5 +680,10 @@ export default {
   position:absolute;
   top: 300px;
   right: 30px;
+}
+
+.item-title {
+    margin-left: 15px;
+    font-size: 16px;
 }
 </style>
