@@ -49,7 +49,7 @@
             /
             <input v-model="uwiFieldInput.last" class="short-input" type="text" maxlength="1">
           </div>
-          <el-button type="primary" plain disabled style="width:200px;margin-top:20px;">Developing</el-button>
+          <el-button type="primary" plain style="width:200px;margin-top:20px;" @click="searchByUWIField">Search</el-button>
 
         </el-collapse-item>
         <!-- Company Search -->
@@ -90,7 +90,7 @@
           >Search</el-button>
         </el-collapse-item>
         <!-- Date Search -->
-        <el-collapse-item title="Production date" name="5">
+        <!-- <el-collapse-item title="Production date" name="5">
           <template slot="title">
             <span class="item-title">Production Date</span>
           </template>
@@ -104,7 +104,7 @@
           </div>
           <el-button type="primary" plain disabled style="width:200px;margin-top:20px;">Developing</el-button>
 
-        </el-collapse-item>
+        </el-collapse-item> -->
       </el-collapse>
       <el-button
         type="info"
@@ -123,13 +123,13 @@ export default {
     return {
       activeName: '1',
       uwiFieldInput: {
-        first: null,
-        lsd: null,
-        sec: null,
-        twp: null,
-        rng: null,
-        mer: null,
-        last: null
+        first: '',
+        lsd: '',
+        sec: '',
+        twp: '',
+        rng: '',
+        mer: '',
+        last: ''
       },
       input: '',
       statusOptions: [
@@ -188,6 +188,25 @@ export default {
           that.$emit('search', response.data)
         })
     },
+    searchByUWIField: function() {
+      const that = this
+      http.get('/searchByUWIField',
+        {
+          params: {
+            first: that.uwiFieldInput.first,
+            lsd: that.uwiFieldInput.lsd,
+            sec: that.uwiFieldInput.sec,
+            twp: that.uwiFieldInput.twp,
+            rng: that.uwiFieldInput.rng,
+            mer: that.uwiFieldInput.mer,
+            last: that.uwiFieldInput.last
+          }
+        }
+      )
+        .then(function(response) {
+          that.$emit('search', response.data)
+        })
+    },
     searchByStatus: function() {
       const that = this
       http.get('/searchByStatus',
@@ -203,6 +222,13 @@ export default {
     },
     clearAll: function() {
       var that = this
+      that.uwiFieldInput.first = ''
+      that.uwiFieldInput.lsd = ''
+      that.uwiFieldInput.sec = ''
+      that.uwiFieldInput.twp = ''
+      that.uwiFieldInput.rng = ''
+      that.uwiFieldInput.mer = ''
+      that.uwiFieldInput.last = ''
       http.get('/initMapData')
         .then(function(response) {
           that.$emit('search', response.data)

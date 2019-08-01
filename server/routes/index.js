@@ -12,6 +12,7 @@ var Neuralnetwork = require('../controllers/neuralnetwork.js')
 
 router.get('/initMapData', Wells.initMapData)
 router.get('/searchByUWI', Search.searchByUWI)
+router.get('/searchByUWIField', Search.searchByUWIField)
 router.get('/searchByStatus', Search.searchByStatus)
 router.get('/numericalClassify', Classification.numericalClassify)
 router.get('/clusterKmeans', Clustering.clusterKmeans)
