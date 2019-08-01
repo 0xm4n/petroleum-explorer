@@ -453,6 +453,7 @@ export default {
         rmse :'',
         pcc:''
       };
+      this.loading = true
     },
     deleteRow(index, rows) {
       rows.splice(index, 1);
@@ -512,11 +513,11 @@ export default {
             },
             xAxis: {
               type: "category",
-              boundaryGap: false,
               data: self.neuralNetworkData.label
             },
             yAxis: {
-              type: "value"
+              type: "value",
+              scale: true
             },
             series: self.series
           }
@@ -579,11 +580,11 @@ export default {
             },
             xAxis: {
               type: "category",
-              boundaryGap: false,
               data: self.neuralNetworkData.label
             },
             yAxis: {
-              type: "value"
+              type: "value",
+              scale: true
             },
             series: self.series
           }
