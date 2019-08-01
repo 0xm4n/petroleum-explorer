@@ -260,6 +260,7 @@
       >
         <!-- <el-input v-model="" :disabled="true"></el-input> -->
         <span class="pcc-label"> pcc:{{neuralNetworkData.pcc}} </span>
+        <span class="rmse-label"> rmse:{{neuralNetworkData.rmse}} </span>
         <v-chart :options="neuralNetworkOption" style="width:100%;" />
 
         <span slot="footer" class="dialog-footer">
@@ -283,7 +284,7 @@ export default {
       neuralNetworkDialogVisible: false,
       activeCollapse: "1",
       lossFunction: "mean_squared_error",
-      optimizer: "adam",
+      optimizer: "sgd",
       learningRate: "0.1",
       epochsNum: "40",
       batchSize: "20",
@@ -444,6 +445,13 @@ export default {
     closeDialog: function() {
       this.neuralNetworkDialogVisible = false;
       this.neuralNetworkOption = {};
+      this.neuralNetworkData= {
+        label : [],
+        real : [],
+        test : [],
+        rmse :'',
+        pcc:''
+      };
     },
     deleteRow(index, rows) {
       rows.splice(index, 1);
@@ -531,6 +539,7 @@ export default {
         })
         .then(function(response) {
           self.neuralNetworkData = response.data;
+          self.neuralNetworkDialogVisible = true;
           self.neuralNetworkOption = {
             title: {
               text: "LSTM"
@@ -577,7 +586,7 @@ export default {
             series: self.series
           };
         });
-      this.neuralNetworkDialogVisible = true;
+      
     },
     addLayer() {
       this.networkLayout = this.networkLayout.concat({
@@ -661,7 +670,12 @@ export default {
 }
 .pcc-label{
   position:absolute;
-  bottom: 100px;
-  right: 20px;
+  top: 330px;
+  right: 30px;
+}
+.rmse-label{
+  position:absolute;
+  top: 300px;
+  right: 30px;
 }
 </style>

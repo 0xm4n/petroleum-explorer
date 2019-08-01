@@ -11,7 +11,10 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras import optimizers
 from keras import callbacks
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from keras.callbacks import EarlyStopping
+from sklearn.preprocessing import MinMaxScaler, StandardScaler\
+
+
 
 def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
     n_vars = 1 if type(data) is list else data.shape[1]
@@ -85,11 +88,11 @@ def buildModel(inputShape, outputShape):
 		activationFunc = layer[1]
 
 		if num == 0:
-			model.add(Dense(neurons, input_shape=inputShape, activation=activationFunc, kernel_initializer='lecun_uniform'))
+			model.add(Dense(neurons, activation=activationFunc ,input_shape=inputShape))
 			num=num+1
 		else:
-			model.add(Dense(neurons, activation=activationFunc, kernel_initializer='lecun_uniform'))	
-	model.add(Dense(outputShape, kernel_initializer='lecun_uniform'))
+			model.add(Dense(neurons, activation=activationFunc, kernel_initializer='uniform'))	
+	model.add(Dense(outputShape))
 	model.compile(optimizer=getOptimizer(), loss=lossfunction)
 	return model
 
@@ -101,9 +104,15 @@ epochsnum=int(sys.argv[4])
 batchsize=int(sys.argv[5])
 testsize=float(sys.argv[6])/100
 network=(sys.argv[7])
-
-
-
+'''
+lossfunction=('mse')
+optimizer=('sgd')
+learningrate=float(0.1)
+epochsnum=int(80)
+batchsize=int(20)
+testsize=float(20)/100
+network=('40 linear  40 linear  40 linear  ')
+'''
 layers=network.split('  ')
 layers=layers[0:-1]
 Layers=[]
@@ -114,7 +123,7 @@ for layer in layers:
 
 seed = 2
 np.random.seed(seed)     
-df = pd.read_csv('C:\project\Petroleum-Explorer-master\Petroleum-Explorer-master\server\script\suncor_full.csv')
+df = pd.read_csv('C:\\Users\\yangc\\Documents\\GitHub\\Petroleum-Explorer\\server\\script\\suncor_full.csv')
 values=df.values[:,1:]
 
 n_days = 1
@@ -142,9 +151,10 @@ y_test =target[n_train_days:,:]
 inputShape = (X_train.shape[1],)
 outputShape=y_train.shape[1]
 
-model = Sequential()
 model=buildModel(inputShape,outputShape)
-model.fit(X_train, y_train, batch_size=batchsize, epochs=epochsnum, verbose=0)
+
+es=EarlyStopping(monitor='val_loss',mode='auto',patience=10)
+model.fit(X_train, y_train, batch_size=batchsize,callbacks=[es],epochs=epochsnum, verbose=0, validation_data=(X_test, y_test))
 
 y_pred = model.predict(X_test)
 y_pred = sc2.inverse_transform(y_pred)

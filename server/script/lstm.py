@@ -12,6 +12,7 @@ from sklearn.metrics import mean_squared_error
 from keras import optimizers
 from keras.layers import LSTM
 from keras import callbacks
+from keras.callbacks import EarlyStopping
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from pandas import Series
 
@@ -37,7 +38,23 @@ def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
     if dropnan:
         agg.dropna(inplace=True)
     return agg
-
+	
+def pearson(vector1, vector2):
+    n = len(vector1)
+    #simple sums
+    sum1 = sum(float(vector1[i]) for i in range(n))
+    sum2 = sum(float(vector2[i]) for i in range(n))
+    #sum up the squares
+    sum1_pow = sum([pow(v, 2.0) for v in vector1])
+    sum2_pow = sum([pow(v, 2.0) for v in vector2])
+    #sum up the products
+    p_sum = sum([vector1[i]*vector2[i] for i in range(n)])
+    #分子num，分母den
+    num = p_sum - (sum1*sum2/n)
+    den = math.sqrt((sum1_pow-pow(sum1, 2)/n)*(sum2_pow-pow(sum2, 2)/n))
+    if den == 0:
+        return 0.0
+    return num/den
 
 def getOptimizer():
 	opt = None
@@ -70,7 +87,7 @@ def buildModel(inputShape, outputShape):
 		 layer=Layers[0]
 		 neurons = int(layer[0])
 		 activationFunc = layer[1]
-		 model.add(LSTM(neurons, input_shape=inputShape, activation=activationFunc, kernel_initializer='lecun_uniform'))
+		 model.add(LSTM(neurons, input_shape=inputShape, activation=activationFunc))
 	else:
 		 for layer in Layers:
 			  count=count+1
@@ -78,16 +95,16 @@ def buildModel(inputShape, outputShape):
 			  activationFunc = layer[1]
 			  
 			  if count == 1:
-					  model.add(LSTM(neurons,return_sequences=True, input_shape=inputShape, activation=activationFunc, kernel_initializer='lecun_uniform'))
+					  model.add(LSTM(neurons,return_sequences=True, input_shape=inputShape, activation=activationFunc, ))
 			  elif count ==num:
-					  model.add(LSTM(neurons, activation=activationFunc, kernel_initializer='lecun_uniform'))
+					  model.add(LSTM(neurons, activation=activationFunc))
 			  else:
-					  model.add(LSTM(neurons, return_sequences=True, activation=activationFunc, kernel_initializer='lecun_uniform'))
+					  model.add(LSTM(neurons, return_sequences=True, activation=activationFunc))
 
 			
 
 
-	model.add(Dense(outputShape, kernel_initializer='lecun_uniform'))
+	model.add(Dense(outputShape))
 	model.compile(optimizer=getOptimizer(), loss=lossfunction)
 	return model
 	
@@ -109,8 +126,9 @@ for layer in layers:
         a=layer.split(' ')
         Layers.append(a)
 
-        
-df = pd.read_csv('C:\project\Petroleum-Explorer-master\Petroleum-Explorer-master\server\script\suncor_full.csv')
+seed = 2
+np.random.seed(seed)   
+df = pd.read_csv('C:\\Users\\yangc\\Documents\\GitHub\\Petroleum-Explorer\\server\\script\\suncor_full.csv')
 values=df.values[:,1:]
 
 
@@ -151,9 +169,8 @@ outputShape= y_train.shape[1]
 
 model = Sequential()
 model=buildModel(inputShape,outputShape)
-print(model.summary())
-
-model.fit(X_train, y_train, batch_size=batchsize, epochs=epochsnum, verbose=0)
+es=EarlyStopping(monitor='val_loss',mode='auto',patience=10)
+model.fit(X_train, y_train, batch_size=batchsize,callbacks=[es],epochs=epochsnum, verbose=0, validation_data=(X_test, y_test))
 
 y_pred = model.predict(X_test)
 y_pred = sc2.inverse_transform(y_pred)

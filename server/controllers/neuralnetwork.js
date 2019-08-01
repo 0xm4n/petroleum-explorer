@@ -18,7 +18,7 @@ module.exports = {
 
     var pythonProcess = new Promise(function(success, nosuccess) {
       var spawn = require('child_process').spawn
-      var py = spawn('python', ['C:\\project\\Petroleum-Explorer-master\\Petroleum-Explorer-master\\server\\script\\ann.py', lossFunction, optimizer, learningRate, epochsNum, batchSize, testSize, network])
+      var py = spawn('python', ['C:\\Users\\yangc\\Documents\\GitHub\\Petroleum-Explorer\\server\\script\\ann.py', lossFunction, optimizer, learningRate, epochsNum, batchSize, testSize, network])
 
       py.stdout.on('data', data => {
         success(data.toString())
@@ -73,7 +73,7 @@ module.exports = {
 
     var pythonProcess = new Promise(function(success, nosuccess) {
       var spawn = require('child_process').spawn
-      var py = spawn('python', ['C:\\project\\Petroleum-Explorer-master\\Petroleum-Explorer-master\\server\\script\\lstm.py', lossFunction, optimizer, learningRate, epochsNum, batchSize, testSize, network])
+      var py = spawn('python', ['C:\\Users\\yangc\\Documents\\GitHub\\Petroleum-Explorer\\server\\script\\lstm.py', lossFunction, optimizer, learningRate, epochsNum, batchSize, testSize, network])
 
       py.stdout.on('data', data => {
         success(data.toString())
