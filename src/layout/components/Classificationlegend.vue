@@ -8,6 +8,7 @@
       >{{ legendTitle }}</h2>
       <i class="el-notification__closeBtn el-icon-close" @click="closeLegend()" />
 
+
       <div class="legend-content">
         <div v-for="item in lengendArr" :key="item.index">
           <img class="color-icon" :src="item.iconSrc" alt>

@@ -92,6 +92,22 @@
           @close="closeLegend($event)"
         />
       </transition>
+
+      <transition name="fade" mode="in-out">
+        <div class="association">
+      <el-table
+        
+        stripe
+        border
+        height="75vh"
+        style="width: 100%"
+      >
+      
+      </el-table>
+        </div>
+
+      </transition>
+
     </div>
     <!-- Widget Panel -->
     <transition name="fade-transform" mode="out-in">
@@ -102,6 +118,7 @@
         @polygon="polygonOperation($event)"
         @classification="classification($event, ...arguments)"
         @clustering="clustering($event, ...arguments)"
+        @Association="Association($event)"
         @reset="init($event)"
       />
     </transition>
@@ -232,6 +249,12 @@ export default {
       this.bottomMarkers = params.bottomPoint
       this.paths = params.path
     },
+
+    Association: function(params) {
+        this.showLegend = true
+        this.legendTitle = 'Categorical Classification'
+    },
+
     polygonOperation(params) {
       switch (params) {
         case 1:
@@ -400,5 +423,14 @@ export default {
 }
 .label-content {
     font-size: 15px;
+}
+.association {
+    position: absolute;
+    background-color: white;
+    bottom: 20px;
+    right: 10px;
+    padding: 14px 26px 14px 13px;
+    border-radius: 5px;
+    box-shadow: 3px 3px 5px #888888;
 }
 </style>

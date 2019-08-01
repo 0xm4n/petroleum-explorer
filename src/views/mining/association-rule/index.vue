@@ -7,7 +7,7 @@
     </div>
 
     <div class="main-content">
-      <el-button type="primary" plain disabled style="width:200px;margin-top:20px;">Developing</el-button>
+      <el-button type="primary" plain style="width:200px;margin-top:20px;" @click="applyAssociationRule">Apply</el-button>
     </div>
   </div>
 </template>
@@ -22,6 +22,10 @@ export default {
   methods: {
     closeTab: function() {
       this.$router.replace({ path: '/home' })
+    },
+
+    applyAssociationRule: function() {
+      this.$emit('Association')
     }
   }
 }
