@@ -8,7 +8,6 @@
       >{{ legendTitle }}</h2>
       <i class="el-notification__closeBtn el-icon-close" @click="closeLegend()" />
 
-
       <div class="legend-content">
         <div v-for="item in lengendArr" :key="item.index">
           <img class="color-icon" :src="item.iconSrc" alt>
@@ -46,7 +45,7 @@ export default {
       var tempArr = []
       for (let i = 0; i < this.catagoryTypeNum; i++) {
         var temp
-        if (this.categoryTypeArr[i] === 'invaild') {
+        if (this.categoryTypeArr[i] === 'invalid') {
           temp = {
             iconSrc: require('@/icons/pin/pin-type10.png'),
             iconTitle: this.categoryTypeArr[i]

@@ -2,7 +2,7 @@
   <div class="page-container">
     <div class="close-bar">
       <span class="sub-title">Neural Network</span>
-      <img class="collapse-icon" src="@/icons/collapse.png" alt="collapse" @click="closeTab" />
+      <img class="collapse-icon" src="@/icons/collapse.png" alt="collapse" @click="closeTab">
     </div>
 
     <div class="main-content">
@@ -123,7 +123,7 @@
               </el-table>
             </el-main>
           </el-container>
-          <el-button style="width:150px;margin-top:20px;" type="primary" @click="clickANN" plain>Run</el-button>
+          <el-button style="width:150px;margin-top:20px;" type="primary" plain @click="clickANN">Run</el-button>
         </el-collapse-item>
 
         <el-collapse-item name="2">
@@ -244,8 +244,8 @@
           <el-button
             style="width:150px;margin-top:20px;"
             type="primary"
-            @click="clickLSTM"
             plain
+            @click="clickLSTM"
           >Run</el-button>
         </el-collapse-item>
       </el-collapse>
@@ -259,8 +259,8 @@
         top="2vh"
       >
         <!-- <el-input v-model="" :disabled="true"></el-input> -->
-        <span class="pcc-label"> pcc:{{neuralNetworkData.pcc}} </span>
-        <span class="rmse-label"> rmse:{{neuralNetworkData.rmse}} </span>
+        <span class="pcc-label"> pcc:{{ neuralNetworkData.pcc }} </span>
+        <span class="rmse-label"> rmse:{{ neuralNetworkData.rmse }} </span>
         <v-chart v-loading="loading" :options="neuralNetworkOption" style="width:100%;" />
 
         <span slot="footer" class="dialog-footer">
@@ -272,198 +272,198 @@
 </template>
 
 <script>
-import ECharts from "vue-echarts";
-import http from "@/utils/http";
-var echarts = require("echarts");
+import ECharts from 'vue-echarts'
+import http from '@/utils/http'
+var echarts = require('echarts')
 export default {
   components: {
-    "v-chart": ECharts
+    'v-chart': ECharts
   },
   data() {
     return {
       neuralNetworkDialogVisible: false,
-      activeCollapse: "",
-      lossFunction: "mean_squared_error",
-      optimizer: "sgd",
-      learningRate: "0.1",
-      epochsNum: "40",
-      batchSize: "20",
+      activeCollapse: '',
+      lossFunction: 'mean_squared_error',
+      optimizer: 'sgd',
+      learningRate: '0.1',
+      epochsNum: '40',
+      batchSize: '20',
       testSize: 20,
-      neuronsNum: "",
-      activationFunction: "",
+      neuronsNum: '',
+      activationFunction: '',
       neuralNetworkOption: {},
       neuralNetworkData: {
         label: [],
         real: [],
         test: [],
-        rmse:'',
-        pcc:''
+        rmse: '',
+        pcc: ''
       },
       lossFuncOptions: [
         {
-          value: "mean_squared_error",
-          label: "Mean Squared Error"
+          value: 'mean_squared_error',
+          label: 'Mean Squared Error'
         },
         {
-          value: "mean_absolute_error",
-          label: "Mean Absolute Error"
+          value: 'mean_absolute_error',
+          label: 'Mean Absolute Error'
         },
         {
-          value: "mean_absolute_percentage_error",
-          label: "Mean Absolute Percentage Error"
+          value: 'mean_absolute_percentage_error',
+          label: 'Mean Absolute Percentage Error'
         },
         {
-          value: "mean_squared_logarithmic_error",
-          label: "Mean Squared Log Error"
+          value: 'mean_squared_logarithmic_error',
+          label: 'Mean Squared Log Error'
         },
         {
-          value: "squared_hinge",
-          label: "Squared Hinge"
+          value: 'squared_hinge',
+          label: 'Squared Hinge'
         },
         {
-          value: "hinge",
-          label: "Hinge"
+          value: 'hinge',
+          label: 'Hinge'
         },
         {
-          value: "cosine_proximity",
-          label: "Cosine_Proximity"
+          value: 'cosine_proximity',
+          label: 'Cosine_Proximity'
         }
       ],
       optimizerOptions: [
         {
-          value: "sgd",
-          label: "Stochastic Gradient Descent"
+          value: 'sgd',
+          label: 'Stochastic Gradient Descent'
         },
         {
-          value: "rmsprop",
-          label: "RMSProp"
+          value: 'rmsprop',
+          label: 'RMSProp'
         },
         {
-          value: "adagrad",
-          label: "Adagrad"
+          value: 'adagrad',
+          label: 'Adagrad'
         },
         {
-          value: "adadelta",
-          label: "Adadelta"
+          value: 'adadelta',
+          label: 'Adadelta'
         },
         {
-          value: "adam",
-          label: "Adam"
+          value: 'adam',
+          label: 'Adam'
         },
         {
-          value: "adamax",
-          label: "Adamax"
+          value: 'adamax',
+          label: 'Adamax'
         },
         {
-          value: "nadam",
-          label: "Nesterov Adam"
+          value: 'nadam',
+          label: 'Nesterov Adam'
         }
       ],
       activationFuncOptions: [
         {
-          value: "softmax",
-          label: "Softmax"
+          value: 'softmax',
+          label: 'Softmax'
         },
         {
-          value: "elu",
-          label: "Exponential Linear Unit"
+          value: 'elu',
+          label: 'Exponential Linear Unit'
         },
         {
-          value: "selu",
-          label: "Scaled Exponential Linear Unit"
+          value: 'selu',
+          label: 'Scaled Exponential Linear Unit'
         },
         {
-          value: "softplus",
-          label: "Softplus"
+          value: 'softplus',
+          label: 'Softplus'
         },
         {
-          value: "softsign",
-          label: "Softsign"
+          value: 'softsign',
+          label: 'Softsign'
         },
         {
-          value: "relu",
-          label: "Rectified Linear Unit"
+          value: 'relu',
+          label: 'Rectified Linear Unit'
         },
         {
-          value: "tanh",
-          label: "Hyperbolic Tangent"
+          value: 'tanh',
+          label: 'Hyperbolic Tangent'
         },
         {
-          value: "sigmoid",
-          label: "Sigmoid"
+          value: 'sigmoid',
+          label: 'Sigmoid'
         },
         {
-          value: "hard_sigmoid",
-          label: "Hard Sigmoid"
+          value: 'hard_sigmoid',
+          label: 'Hard Sigmoid'
         },
         {
-          value: "linear",
-          label: "Linear"
+          value: 'linear',
+          label: 'Linear'
         }
       ],
       networkLayout: [],
       loading: true
-    };
+    }
   },
   computed: {
     series() {
-      var arr = [];
-      var dataType = "real";
-      var neuralNetworkData = this.neuralNetworkData;
+      var arr = []
+      var dataType = 'real'
+      var neuralNetworkData = this.neuralNetworkData
       var temp = {
-        name: "real",
-        type: "line",
+        name: 'real',
+        type: 'line',
         data: neuralNetworkData[dataType]
-      };
-      arr[0] = temp;
+      }
+      arr[0] = temp
 
-      var dataType = "test";
-      var neuralNetworkData = this.neuralNetworkData;
+      var dataType = 'test'
+      var neuralNetworkData = this.neuralNetworkData
       var temp = {
-        name: "test",
-        type: "line",
+        name: 'test',
+        type: 'line',
         data: neuralNetworkData[dataType]
-      };
-      arr[1] = temp;
+      }
+      arr[1] = temp
 
-      return arr;
+      return arr
     },
     Network() {
-      var str = "";
+      var str = ''
       for (let i = 0; i < this.networkLayout.length; i++) {
-        var layer = this.networkLayout[i];
-        str = str + layer.neurons + " ";
-        str = str + layer.activation + "  ";
+        var layer = this.networkLayout[i]
+        str = str + layer.neurons + ' '
+        str = str + layer.activation + '  '
       }
 
-      return str;
+      return str
     }
   },
   methods: {
     closeTab: function() {
-      this.$router.replace({ path: "/home" });
+      this.$router.replace({ path: '/home' })
     },
     closeDialog: function() {
-      this.neuralNetworkDialogVisible = false;
-      this.neuralNetworkOption = {};
-      this.neuralNetworkData= {
-        label : [],
-        real : [],
-        test : [],
-        rmse :'',
-        pcc:''
-      };
+      this.neuralNetworkDialogVisible = false
+      this.neuralNetworkOption = {}
+      this.neuralNetworkData = {
+        label: [],
+        real: [],
+        test: [],
+        rmse: '',
+        pcc: ''
+      }
       this.loading = true
     },
     deleteRow(index, rows) {
-      rows.splice(index, 1);
+      rows.splice(index, 1)
     },
 
     clickANN: function() {
-      const self = this;
-      self.neuralNetworkDialogVisible = true;
+      const self = this
+      self.neuralNetworkDialogVisible = true
       http
-        .get("/runANN", {
+        .get('/runANN', {
           params: {
             lossFunction: self.lossFunction,
             optimizer: self.optimizer,
@@ -478,59 +478,58 @@ export default {
           self.neuralNetworkData = response.data
           self.neuralNetworkOption = {
             title: {
-              text: "ANN"
+              text: 'ANN'
             },
             tooltip: {
-              trigger: "axis"
+              trigger: 'axis'
             },
             legend: {
-              data: ["real", "test"],
-              orient: "vertical",
-              right: "right",
+              data: ['real', 'test'],
+              orient: 'vertical',
+              right: 'right',
               top: 50
             },
             grid: {
-              left: "3%",
-              right: "13%",
-              bottom: "12%",
+              left: '3%',
+              right: '13%',
+              bottom: '12%',
               containLabel: true
             },
             dataZoom: [
               {
-                type: "inside"
+                type: 'inside'
               },
               {
-                type: "slider"
+                type: 'slider'
               }
             ],
             toolbox: {
-              right: "6%",
+              right: '6%',
               feature: {
                 saveAsImage: {
-                  title: "Save"
+                  title: 'Save'
                 }
               }
             },
             xAxis: {
-              type: "category",
+              type: 'category',
               data: self.neuralNetworkData.label
             },
             yAxis: {
-              type: "value",
+              type: 'value',
               scale: true
             },
             series: self.series
           }
-          self.loading =false
-        });
-      
+          self.loading = false
+        })
     },
 
     clickLSTM: function() {
-      const self = this;
+      const self = this
       self.neuralNetworkDialogVisible = true
       http
-        .get("/runLSTM", {
+        .get('/runLSTM', {
           params: {
             lossFunction: self.lossFunction,
             optimizer: self.optimizer,
@@ -545,61 +544,60 @@ export default {
           self.neuralNetworkData = response.data
           self.neuralNetworkOption = {
             title: {
-              text: "LSTM"
+              text: 'LSTM'
             },
             tooltip: {
-              trigger: "axis"
+              trigger: 'axis'
             },
             legend: {
-              data: ["real", "test"],
-              orient: "vertical",
-              right: "right",
+              data: ['real', 'test'],
+              orient: 'vertical',
+              right: 'right',
               top: 50
             },
             grid: {
-              left: "3%",
-              right: "13%",
-              bottom: "12%",
+              left: '3%',
+              right: '13%',
+              bottom: '12%',
               containLabel: true
             },
             dataZoom: [
               {
-                type: "inside"
+                type: 'inside'
               },
               {
-                type: "slider"
+                type: 'slider'
               }
             ],
             toolbox: {
-              right: "6%",
+              right: '6%',
               feature: {
                 saveAsImage: {
-                  title: "Save"
+                  title: 'Save'
                 }
               }
             },
             xAxis: {
-              type: "category",
+              type: 'category',
               data: self.neuralNetworkData.label
             },
             yAxis: {
-              type: "value",
+              type: 'value',
               scale: true
             },
             series: self.series
           }
-          self.loading =false
-        });
-      
+          self.loading = false
+        })
     },
     addLayer() {
       this.networkLayout = this.networkLayout.concat({
         neurons: this.neuronsNum,
         activation: this.activationFunction
-      });
+      })
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -674,13 +672,13 @@ export default {
 }
 .pcc-label{
   position:absolute;
-  top: 330px;
-  right: 30px;
+  bottom: 195px;
+  right: 18px;
 }
 .rmse-label{
   position:absolute;
-  top: 300px;
-  right: 30px;
+  bottom: 175px;
+  right: 18px;
 }
 
 .item-title {

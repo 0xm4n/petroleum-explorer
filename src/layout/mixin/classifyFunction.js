@@ -46,7 +46,7 @@ export default {
               self.topMarkersIcon[i] = { url: require('@/icons/marker/marker-type' + (j + 1).toString() + '.png') }
               self.bottomMarkersIcon[i] = { url: require('@/icons/pin/pin-type' + (j + 1).toString() + '.png') }
             }
-            if (point['label'] === 'invaild') {
+            if (point['label'] === 'invalid') {
               self.topMarkersIcon[i] = { url: require('@/icons/marker/marker-type10.png') }
               self.bottomMarkersIcon[i] = { url: require('@/icons/pin/pin-type10.png') }
             }
