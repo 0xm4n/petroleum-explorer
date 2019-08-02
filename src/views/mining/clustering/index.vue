@@ -56,6 +56,20 @@
             @click="applyClustering()"
           >Apply</el-button>
         </el-collapse-item>
+        <!-- Hierarchical Clustering -->
+        <el-collapse-item name="2">
+          <template slot="title">
+            <span class="item-title">Hierarchical</span>
+          </template>
+          <div class="expansion-content" style>
+          </div>
+          <el-button
+            type="primary"
+            plain
+            style="width:200px;margin-top:15px;"
+            @click="applyClustering()"
+          >Run</el-button>
+        </el-collapse-item>
       </el-collapse>
     </div>
   </div>
@@ -65,7 +79,7 @@
 export default {
   data() {
     return {
-      activeCollapse: '1',
+      activeCollapse: '',
       checkList: [],
       clusterNumOption: [
         {
