@@ -53,15 +53,15 @@ async function classification(queryAttr) {
   for (let i = 0; i < classNum; i++) {
     data.categoryTypeArr = data.categoryTypeArr.concat(intervals[i] + ' - ' + intervals[i + 1])
   }
-  data.categoryTypeArr = data.categoryTypeArr.concat('invaild')
+  data.categoryTypeArr = data.categoryTypeArr.concat('invalid')
   // give each point a lebel depend on the value of avgInjHour
   data.points = _.map(data.points, mapFunc)
 
-  // put the invaild point into the points array
+  // put the invalid point into the points array
   var temp = _.times(wellsNum, (index) => {
     return {
       wid: index + 1,
-      label: 'invaild'
+      label: 'invalid'
     }
   })
   data.points = _.unionBy(data.points, temp, 'wid')

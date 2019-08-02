@@ -52,13 +52,13 @@
           <el-button type="primary" plain style="width:200px;margin-top:20px;" @click="searchByUWIField">Search</el-button>
 
         </el-collapse-item>
-        <!-- Company Search -->
-        <el-collapse-item title="Company" name="3">
+        <!-- Field Search -->
+        <el-collapse-item title="Field" name="3">
           <template slot="title">
-            <span class="item-title">Company</span>
+            <span class="item-title">Field</span>
           </template>
           <div class="expansion-content" style>
-            <el-input v-model="input" placeholder="Company Name" style="width:200px;" />
+            <el-input v-model="input" placeholder="Field Name" style="width:200px;" />
             <el-button type="primary" plain disabled style="width:200px;margin-top:20px;">Developing</el-button>
 
           </div>

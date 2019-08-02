@@ -123,7 +123,7 @@ for layer in layers:
 
 seed = 2
 np.random.seed(seed)     
-df = pd.read_csv('C:\\Users\\yangc\\Documents\\GitHub\\Petroleum-Explorer\\server\\script\\suncor_full.csv')
+df = pd.read_csv('/root/server/script/suncor_full.csv')
 values=df.values[:,1:]
 
 n_days = 1
