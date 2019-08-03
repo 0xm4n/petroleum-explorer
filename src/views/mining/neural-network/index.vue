@@ -235,7 +235,7 @@
 
                     
           <div style="margin-left:25px;">
-            <el-checkbox-group v-if="haveSelected" v-model="confirmCheckList" style="text-align:left;">
+            <el-checkbox-group v-if="haveSelected1" v-model="confirmCheckList" style="text-align:left;">
               <el-checkbox v-for="item in checkList" :key="item.value" :label="item" style="width:38%;text-align:left" disabled />
 
             </el-checkbox-group>
@@ -416,6 +416,114 @@
         </span>
       </el-dialog>
 
+      <el-dialog
+        title="Table"
+        :visible.sync="tableDialogVisible"
+        width="80%"
+        :before-close="closeTableDialog"
+        :modal-append-to-body="false"
+        top="2vh"
+      >
+        <!-- <el-input v-model="" :disabled="true"></el-input> -->
+        <el-table
+        :data="tableData"
+        stripe
+        border
+        height="75vh"
+        style="width: 100%"
+      >
+        <el-table-column
+          type="index"
+        />
+        <el-table-column
+          prop="Date"
+          label="Date"
+          width='120'
+   
+        />
+        <el-table-column
+          prop="101STM"
+          label="101STM"
+          width='120'
+  
+        />
+        <el-table-column
+          prop="102STM"
+          label="102STM"
+          width='120'
+        />
+        <el-table-column
+          prop="103STM"
+          label="103STM"
+          width='120'
+
+        />
+        <el-table-column
+          prop="104STM"
+          label="104STM"
+          width='120'
+        />
+        <el-table-column
+          prop="105STM"
+          label="105STM"
+          width='120'
+        />
+        <el-table-column
+          prop="106STM"
+          label="106STM"
+          width='120'
+        />
+        <el-table-column
+          prop="107STM"
+          label="107STM"
+          width='120'
+        />
+        <el-table-column
+          prop="108STM"
+          label="108STM"
+          width='120'
+    
+        />
+        <el-table-column
+          prop="109STM"
+          label="109STM"
+          width='120'
+ 
+        />
+        <el-table-column
+          prop="110STM"
+          label="110STM"
+          width='120'
+
+        />
+        <el-table-column
+          prop="115STM"
+          label="115STM"
+          width='120'
+        />
+        <el-table-column
+          prop="116STM"
+          label="116STM"
+          width='120'
+        />
+        <el-table-column
+          prop="117STM"
+          label="117STM"
+          width='120'
+        />
+        <el-table-column
+          prop="WOR"
+          label="WOR"
+          width='120'
+        />
+      </el-table>
+
+
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="closeTableDialog">Close</el-button>
+        </span>
+      </el-dialog>
+
       <!-- input data chart -->
       <el-dialog
         title="Input Data"
@@ -443,6 +551,7 @@
             <el-checkbox label="117STM" />
             <el-checkbox label="WOR" />
           </el-checkbox-group>
+          <el-button type="primary" @click="showTable">Table</el-button>
           <el-button type="primary" @click="closeDataDialog">Select</el-button>
         </span>
       </el-dialog>
@@ -461,6 +570,7 @@ export default {
   data() {
     return {
       haveSelected: false,
+      haveSelected1: false,
       checkList: [],
       neuralNetworkDialogVisible: false,
       dataDialogVisible: false,
@@ -663,7 +773,9 @@ export default {
       networkLayout: [],
       loading: true,
       fileList: [],
-      confirmCheckList: []
+      tableDialogVisible:false,
+      confirmCheckList: [],
+      tableData: []
     }
   },
   computed: {
@@ -719,6 +831,21 @@ export default {
     closeTab: function() {
       this.$router.replace({ path: '/home' })
     },
+    showTable: function(){
+
+      const self = this
+      this.tableDialogVisible = true
+      http
+        .get('/getWORData', {
+          params: {
+          }
+        })
+        .then(function(response) {
+          self.tableData = response.data
+ 
+        })
+
+    },
     closeDialog: function() {
       this.neuralNetworkDialogVisible = false
       this.neuralNetworkOption = {}
@@ -734,13 +861,18 @@ export default {
     closeDataDialog: function() {
       this.dataDialogVisible = false
       this.haveSelected = true
+      this.haveSelected1 = true
       this.confirmCheckList = this.checkList
+    },
+    closeTableDialog: function() {
+      this.tableDialogVisible = false
     },
     deleteRow(index, rows) {
       rows.splice(index, 1)
     },
     clickANN: function() {
       const self = this
+      self.haveSelected1 = false
       self.neuralNetworkDialogVisible = true
       http
         .get('/runANN', {
@@ -807,6 +939,7 @@ export default {
     clickLSTM: function() {
       const self = this
       self.neuralNetworkDialogVisible = true
+      self.haveSelected = false
       http
         .get('/runLSTM', {
           params: {

@@ -186,6 +186,17 @@ module.exports = {
 
     })
     ctx.response.body = data
+  },
+  async getWORData(ctx) {
+    var data
+    await db.Suncor_full.findAll({
+      attributes: [['Date', 'Date'], ['101STM', '101STM'], ['102STM', '102STM'], ['103STM', '103STM'], ['104STM', '104STM'], ['105STM', '105STM'], ['106STM', '106STM'], ['107STM', '107STM'], ['108STM', '108STM'], ['109STM', '109STM'], ['110STM', '110STM'], ['115STM', '115STM'], ['116STM', '116STM'], ['117STM', '117STM'], ['WOR', 'WOR']]
+    }).then(WORData => {
+      WORData = JSON.stringify(WORData)
+      WORData = JSON.parse(WORData)
+      data = WORData
+      
+    })
+    ctx.response.body = data
   }
-
 }
