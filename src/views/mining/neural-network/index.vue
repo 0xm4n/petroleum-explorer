@@ -38,6 +38,13 @@
               <el-button type="primary" plain style="width:140px;" @click="showDataDialog">Select</el-button>
             </div>
           </div>
+          <div style="margin-left:25px;">
+            <el-checkbox-group v-if="haveSelected" v-model="confirmCheckList" style="text-align:left;">
+              <el-checkbox v-for="item in checkList" :key="item.value" :label="item" style="width:40%;text-align:left" disabled />
+
+            </el-checkbox-group>
+          </div>
+
           <!-- output data -->
           <div class="input-row">
             <div class="input-label">Output Data</div>
@@ -442,6 +449,7 @@ export default {
   },
   data() {
     return {
+      haveSelected: false,
       checkList: [],
       neuralNetworkDialogVisible: false,
       dataDialogVisible: false,
@@ -642,7 +650,8 @@ export default {
       ],
       networkLayout: [],
       loading: true,
-      fileList: []
+      fileList: [],
+      confirmCheckList: []
     }
   },
   computed: {
@@ -712,6 +721,8 @@ export default {
     },
     closeDataDialog: function() {
       this.dataDialogVisible = false
+      this.haveSelected = true
+      this.confirmCheckList = this.checkList
     },
     deleteRow(index, rows) {
       rows.splice(index, 1)
