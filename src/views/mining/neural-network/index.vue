@@ -38,9 +38,10 @@
               <el-button type="primary" plain style="width:140px;" @click="showDataDialog">Select</el-button>
             </div>
           </div>
+
           <div style="margin-left:25px;">
             <el-checkbox-group v-if="haveSelected" v-model="confirmCheckList" style="text-align:left;">
-              <el-checkbox v-for="item in checkList" :key="item.value" :label="item" style="width:40%;text-align:left" disabled />
+              <el-checkbox v-for="item in checkList" :key="item.value" :label="item" style="width:38%;text-align:left" disabled />
 
             </el-checkbox-group>
           </div>
@@ -231,6 +232,15 @@
               <el-button type="primary" plain style="width:140px;" @click="showDataDialog">Select</el-button>
             </div>
           </div>
+
+                    
+          <div style="margin-left:25px;">
+            <el-checkbox-group v-if="haveSelected" v-model="confirmCheckList" style="text-align:left;">
+              <el-checkbox v-for="item in checkList" :key="item.value" :label="item" style="width:38%;text-align:left" disabled />
+
+            </el-checkbox-group>
+          </div>
+          
           <!-- output data -->
           <div class="input-row">
             <div class="input-label">Output Data</div>
@@ -431,6 +441,7 @@
             <el-checkbox label="115STM" />
             <el-checkbox label="116STM" />
             <el-checkbox label="117STM" />
+            <el-checkbox label="WOR" />
           </el-checkbox-group>
           <el-button type="primary" @click="closeDataDialog">Select</el-button>
         </span>
@@ -544,6 +555,7 @@ export default {
         '115STM': [],
         '116STM': [],
         '117STM': [],
+        'WOR': [],
         label: []
       },
       lossFuncOptions: [
@@ -679,7 +691,7 @@ export default {
     },
     dataSeries() {
       var arr = []
-      var labelArr = ['101STM', '102STM', '103STM', '104STM', '105STM', '106STM', '107STM', '108STM', '109STM', '110STM', '115STM', '116STM', '117STM']
+      var labelArr = ['101STM', '102STM', '103STM', '104STM', '105STM', '106STM', '107STM', '108STM', '109STM', '110STM', '115STM', '116STM', '117STM','WOR']
       for (let i = 0; i < labelArr.length; i++) {
         var dataType = labelArr[i]
         var inputData = this.inputData
@@ -893,7 +905,7 @@ export default {
               trigger: 'axis'
             },
             legend: {
-              data: ['101STM', '102STM', '103STM', '104STM', '105STM', '106STM', '107STM', '108STM', '109STM', '110STM', '115STM', '116STM', '117STM'],
+              data: ['101STM', '102STM', '103STM', '104STM', '105STM', '106STM', '107STM', '108STM', '109STM', '110STM', '115STM', '116STM', '117STM','WOR'],
               orient: 'vertical',
               right: 'right',
               top: 50
