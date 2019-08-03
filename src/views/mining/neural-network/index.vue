@@ -12,11 +12,58 @@
           <template slot="title">
             <span class="item-title">ANN</span>
           </template>
-
+          <!-- upload data -->
+          <div class="upload">
+            <el-upload
+              class="upload-demo"
+              action="https://jsonplaceholder.typicode.com/posts/"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :before-remove="beforeRemove"
+              multiple
+              :limit="3"
+              :on-exceed="handleExceed"
+              :file-list="fileList"
+              style=""
+            >
+              <el-button size="small" type="primary">Upload Data</el-button>
+              <div slot="tip" class="el-upload__tip">xls files with a size less than 500kb</div>
+            </el-upload>
+          </div>
+          <el-divider />
+          <!-- input data -->
+          <div class="input-row">
+            <div class="input-label">Input Data</div>
+            <div style="display: inline-block;">
+              <el-button type="primary" plain style="width:140px;" @click="showDataDialog">Select</el-button>
+            </div>
+          </div>
+          <!-- output data -->
+          <div class="input-row">
+            <div class="input-label">Output Data</div>
+            <div style="display: inline-block;">
+              <el-select
+                v-model="outputDataValue"
+                placeholder="Select"
+                style="width:140px;"
+              >
+                <el-option
+                  v-for="item in outputDataOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </div>
+          </div>
           <div class="input-row">
             <div class="input-label">Loss Function</div>
             <div style="display: inline-block;">
-              <el-select v-model="lossFunction" placeholder="Select" style="width:140px;">
+              <el-select
+                v-model="lossFunction"
+                placeholder="Select"
+                style="width:140px;"
+              >
                 <el-option
                   v-for="item in lossFuncOptions"
                   :key="item.value"
@@ -30,7 +77,11 @@
           <div class="input-row">
             <div class="input-label">Optimizer</div>
             <div style="display: inline-block;">
-              <el-select v-model="optimizer" placeholder="Select" style="width:140px;">
+              <el-select
+                v-model="optimizer"
+                placeholder="Select"
+                style="width:140px;"
+              >
                 <el-option
                   v-for="item in optimizerOptions"
                   :key="item.value"
@@ -44,21 +95,33 @@
           <div class="input-row">
             <div class="input-label">Learning Rate</div>
             <div style="display: inline-block;">
-              <el-input v-model="learningRate" placeholder="Learning Rate" style="width:140px;" />
+              <el-input
+                v-model="learningRate"
+                placeholder="Learning Rate"
+                style="width:140px;"
+              />
             </div>
           </div>
 
           <div class="input-row">
             <div class="input-label">Epochs Number</div>
             <div style="display: inline-block;">
-              <el-input v-model="epochsNum" placeholder="Epochs Number" style="width:140px;" />
+              <el-input
+                v-model="epochsNum"
+                placeholder="Epochs Number"
+                style="width:140px;"
+              />
             </div>
           </div>
 
           <div class="input-row">
             <div class="input-label">Batch Size</div>
             <div style="display: inline-block;">
-              <el-input v-model="batchSize" placeholder="Batch Size" style="width:140px;" />
+              <el-input
+                v-model="batchSize"
+                placeholder="Batch Size"
+                style="width:140px;"
+              />
             </div>
           </div>
 
@@ -123,18 +186,70 @@
               </el-table>
             </el-main>
           </el-container>
-          <el-button style="width:150px;margin-top:20px;" type="primary" plain @click="clickANN">Run</el-button>
+          <el-button
+            style="width:150px;margin-top:20px;"
+            type="primary"
+            plain
+            @click="clickANN"
+          >Run</el-button>
         </el-collapse-item>
-
+        <!-- LSTM -->
         <el-collapse-item name="2">
           <template slot="title">
             <span class="item-title">LSTM</span>
           </template>
-
+          <!-- upload data -->
+          <div class="upload">
+            <el-upload
+              class="upload-demo"
+              action="https://jsonplaceholder.typicode.com/posts/"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :before-remove="beforeRemove"
+              multiple
+              :limit="3"
+              :on-exceed="handleExceed"
+              :file-list="fileList"
+              style=""
+            >
+              <el-button size="small" type="primary">Upload Data</el-button>
+              <div slot="tip" class="el-upload__tip">xls files with a size less than 500kb</div>
+            </el-upload>
+          </div>
+          <el-divider />
+          <!-- input data -->
+          <div class="input-row">
+            <div class="input-label">Input Data</div>
+            <div style="display: inline-block;">
+              <el-button type="primary" plain style="width:140px;" @click="showDataDialog">Select</el-button>
+            </div>
+          </div>
+          <!-- output data -->
+          <div class="input-row">
+            <div class="input-label">Output Data</div>
+            <div style="display: inline-block;">
+              <el-select
+                v-model="outputDataValue"
+                placeholder="Select"
+                style="width:140px;"
+              >
+                <el-option
+                  v-for="item in outputDataOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </div>
+          </div>
           <div class="input-row">
             <div class="input-label">Loss Function</div>
             <div style="display: inline-block;">
-              <el-select v-model="lossFunction" placeholder="Select" style="width:140px;">
+              <el-select
+                v-model="lossFunction"
+                placeholder="Select"
+                style="width:140px;"
+              >
                 <el-option
                   v-for="item in lossFuncOptions"
                   :key="item.value"
@@ -148,7 +263,11 @@
           <div class="input-row">
             <div class="input-label">Optimizer</div>
             <div style="display: inline-block;">
-              <el-select v-model="optimizer" placeholder="Select" style="width:140px;">
+              <el-select
+                v-model="optimizer"
+                placeholder="Select"
+                style="width:140px;"
+              >
                 <el-option
                   v-for="item in optimizerOptions"
                   :key="item.value"
@@ -162,21 +281,33 @@
           <div class="input-row">
             <div class="input-label">Learning Rate</div>
             <div style="display: inline-block;">
-              <el-input v-model="learningRate" placeholder="Learning Rate" style="width:140px;" />
+              <el-input
+                v-model="learningRate"
+                placeholder="Learning Rate"
+                style="width:140px;"
+              />
             </div>
           </div>
 
           <div class="input-row">
             <div class="input-label">Epochs Number</div>
             <div style="display: inline-block;">
-              <el-input v-model="epochsNum" placeholder="Epochs Number" style="width:140px;" />
+              <el-input
+                v-model="epochsNum"
+                placeholder="Epochs Number"
+                style="width:140px;"
+              />
             </div>
           </div>
 
           <div class="input-row">
             <div class="input-label">Batch Size</div>
             <div style="display: inline-block;">
-              <el-input v-model="batchSize" placeholder="Batch Size" style="width:140px;" />
+              <el-input
+                v-model="batchSize"
+                placeholder="Batch Size"
+                style="width:140px;"
+              />
             </div>
           </div>
 
@@ -259,12 +390,42 @@
         top="2vh"
       >
         <!-- <el-input v-model="" :disabled="true"></el-input> -->
-        <span class="pcc-label"> pcc:{{ neuralNetworkData.pcc }} </span>
-        <span class="rmse-label"> rmse:{{ neuralNetworkData.rmse }} </span>
+        <span class="pcc-label">pcc:{{ neuralNetworkData.pcc }}</span>
+        <span class="rmse-label">rmse:{{ neuralNetworkData.rmse }}</span>
         <v-chart v-loading="loading" :options="neuralNetworkOption" style="width:100%;" />
 
         <span slot="footer" class="dialog-footer">
           <el-button type="primary" @click="closeDialog">Close</el-button>
+        </span>
+      </el-dialog>
+
+      <!-- input data chart -->
+      <el-dialog
+        title="Input Data"
+        :visible.sync="dataDialogVisible"
+        width="50%"
+        :before-close="closeDataDialog"
+        :modal-append-to-body="false"
+        top="2vh"
+      >
+        <v-chart :options="inputDataOption" style="width:100%;" />
+        <span slot="footer" class="dialog-footer">
+          <el-checkbox-group v-model="checkList" style="text-align:left;">
+            <el-checkbox label="101STM" />
+            <el-checkbox label="102STM" />
+            <el-checkbox label="103STM" />
+            <el-checkbox label="104STM" />
+            <el-checkbox label="105STM" />
+            <el-checkbox label="106STM" />
+            <el-checkbox label="107STM" />
+            <el-checkbox label="108STM" />
+            <el-checkbox label="109STM" />
+            <el-checkbox label="110STM" />
+            <el-checkbox label="115STM" />
+            <el-checkbox label="116STM" />
+            <el-checkbox label="117STM" />
+          </el-checkbox-group>
+          <el-button type="primary" @click="closeDataDialog">Select</el-button>
         </span>
       </el-dialog>
     </div>
@@ -281,7 +442,9 @@ export default {
   },
   data() {
     return {
+      checkList: [],
       neuralNetworkDialogVisible: false,
+      dataDialogVisible: false,
       activeCollapse: '',
       lossFunction: 'mean_squared_error',
       optimizer: 'sgd',
@@ -290,6 +453,65 @@ export default {
       batchSize: '20',
       testSize: 20,
       neuronsNum: '',
+      outputDataValue: '',
+      outputDataOptions: [
+        {
+          value: '101STM',
+          label: '101STM'
+        },
+        {
+          value: '102STM',
+          label: '102STM'
+        },
+        {
+          value: '103STM',
+          label: '103STM'
+        },
+        {
+          value: '104STM',
+          label: '104STM'
+        },
+        {
+          value: '105STM',
+          label: '105STM'
+        },
+        {
+          value: '106STM',
+          label: '106STM'
+        },
+        {
+          value: '107STM',
+          label: '107STM'
+        },
+        {
+          value: '108STM',
+          label: '108STM'
+        },
+        {
+          value: '109STM',
+          label: '109STM'
+        },
+        {
+          value: '110STM',
+          label: '110STM'
+        },
+        {
+          value: '115STM',
+          label: '115STM'
+        },
+        {
+          value: '116STM',
+          label: '116STM'
+        },
+        {
+          value: '117STM',
+          label: '117STM'
+        },
+        {
+          value: 'WOR',
+          label: 'WOR'
+        }
+      ],
       activationFunction: '',
       neuralNetworkOption: {},
       neuralNetworkData: {
@@ -298,6 +520,23 @@ export default {
         test: [],
         rmse: '',
         pcc: ''
+      },
+      inputDataOption: {},
+      inputData: {
+        '101STM': [],
+        '102STM': [],
+        '103STM': [],
+        '104STM': [],
+        '105STM': [],
+        '106STM': [],
+        '107STM': [],
+        '108STM': [],
+        '109STM': [],
+        '110STM': [],
+        '115STM': [],
+        '116STM': [],
+        '117STM': [],
+        label: []
       },
       lossFuncOptions: [
         {
@@ -402,7 +641,8 @@ export default {
         }
       ],
       networkLayout: [],
-      loading: true
+      loading: true,
+      fileList: []
     }
   },
   computed: {
@@ -417,15 +657,30 @@ export default {
       }
       arr[0] = temp
 
-      var dataType = 'test'
-      var neuralNetworkData = this.neuralNetworkData
-      var temp = {
+      dataType = 'test'
+      neuralNetworkData = this.neuralNetworkData
+      temp = {
         name: 'test',
         type: 'line',
         data: neuralNetworkData[dataType]
       }
       arr[1] = temp
 
+      return arr
+    },
+    dataSeries() {
+      var arr = []
+      var labelArr = ['101STM', '102STM', '103STM', '104STM', '105STM', '106STM', '107STM', '108STM', '109STM', '110STM', '115STM', '116STM', '117STM']
+      for (let i = 0; i < labelArr.length; i++) {
+        var dataType = labelArr[i]
+        var inputData = this.inputData
+        var temp = {
+          name: labelArr[i],
+          type: 'line',
+          data: inputData[dataType]
+        }
+        arr[i] = temp
+      }
       return arr
     },
     Network() {
@@ -455,10 +710,12 @@ export default {
       }
       this.loading = true
     },
+    closeDataDialog: function() {
+      this.dataDialogVisible = false
+    },
     deleteRow(index, rows) {
       rows.splice(index, 1)
     },
-
     clickANN: function() {
       const self = this
       self.neuralNetworkDialogVisible = true
@@ -524,7 +781,6 @@ export default {
           self.loading = false
         })
     },
-
     clickLSTM: function() {
       const self = this
       self.neuralNetworkDialogVisible = true
@@ -595,6 +851,75 @@ export default {
         neurons: this.neuronsNum,
         activation: this.activationFunction
       })
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePreview(file) {
+      console.log(file)
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`)
+    },
+    showDataDialog() {
+      const self = this
+      this.dataDialogVisible = true
+      http
+        .get('/getInputData', {
+          params: {
+          }
+        })
+        .then(function(response) {
+          self.inputData = response.data
+          self.inputDataOption = {
+            title: {
+              text: 'Input Data'
+            },
+            tooltip: {
+              trigger: 'axis'
+            },
+            legend: {
+              data: ['101STM', '102STM', '103STM', '104STM', '105STM', '106STM', '107STM', '108STM', '109STM', '110STM', '115STM', '116STM', '117STM'],
+              orient: 'vertical',
+              right: 'right',
+              top: 50
+            },
+            grid: {
+              left: '3%',
+              right: '13%',
+              bottom: '12%',
+              containLabel: true
+            },
+            dataZoom: [
+              {
+                type: 'inside'
+              },
+              {
+                type: 'slider'
+              }
+            ],
+            toolbox: {
+              right: '6%',
+              feature: {
+                saveAsImage: {
+                  title: 'Save'
+                }
+              }
+            },
+            xAxis: {
+              type: 'category',
+              data: self.inputData.label
+            },
+            yAxis: {
+              type: 'value',
+              scale: true
+            },
+            series: self.dataSeries
+          }
+        })
     }
   }
 }
@@ -602,87 +927,92 @@ export default {
 
 <style lang="scss" scoped>
 .page {
-  &-container {
-    width: 340px;
-    position: absolute;
-    top: 0;
-    background-color: white;
-    z-index: 1;
-    height: 100vh;
-    box-shadow: 3px 3px 3px #888888;
-  }
-  &-text {
-    font-size: 50px;
-    line-height: 66px;
-  }
+    &-container {
+        width: 340px;
+        position: absolute;
+        top: 0;
+        background-color: white;
+        z-index: 1;
+        height: 100vh;
+        box-shadow: 3px 3px 3px #888888;
+    }
+    &-text {
+        font-size: 50px;
+        line-height: 66px;
+    }
 }
 
 .close-bar {
-  width: 100%;
-  height: 50px;
-  text-align: center;
-  position: relative;
-  border-bottom: 1px solid rgba(182, 182, 182, 0.838);
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid rgba(182, 182, 182, 0.838);
 }
 .sub-title {
-  line-height: 50px;
-  font-size: 20px;
+    line-height: 50px;
+    font-size: 20px;
 }
 
 .collapse-icon {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  width: 35px;
-  height: 35px;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 35px;
+    height: 35px;
 }
 
 .main-content {
-  width: 340px;
-  text-align: center;
-  max-height: calc(100vh - 65px);
-  overflow-y: visible;
-  overflow-x: hidden;
+    width: 340px;
+    text-align: center;
+    max-height: calc(100vh - 65px);
+    overflow-y: visible;
+    overflow-x: hidden;
 }
 
 .input-label {
-  display: inline-block;
-  width: 135px;
-  text-align: left;
+    display: inline-block;
+    width: 135px;
+    text-align: left;
 }
 
 .input-row {
-  margin: 3px 0 8px;
+    margin: 3px 0 8px;
 }
 
 .el-main {
-  padding: 0;
+    padding: 0;
 }
 .el-aside {
-  padding: 0;
+    padding: 0;
 }
 .add-button {
-  position: absolute;
-  top: 50%;
-  transform: translate(-35%, -50%);
+    position: absolute;
+    top: 50%;
+    transform: translate(-35%, -50%);
 }
 .el-header {
-  padding: 0;
-  height: 25px !important;
+    padding: 0;
+    height: 25px !important;
 }
-.pcc-label{
-  position:absolute;
-  bottom: 195px;
-  right: 18px;
+.pcc-label {
+    position: absolute;
+    bottom: 195px;
+    right: 18px;
 }
-.rmse-label{
-  position:absolute;
-  bottom: 175px;
-  right: 18px;
+.rmse-label {
+    position: absolute;
+    bottom: 175px;
+    right: 18px;
 }
 
 .item-title {
     margin-left: 15px;
     font-size: 16px;
+}
+
+.el-col {
+  text-align: left;
+  padding-left: 20px;
 }
 </style>
