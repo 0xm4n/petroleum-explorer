@@ -403,7 +403,7 @@
       <el-dialog
         title="Input Data"
         :visible.sync="dataDialogVisible"
-        width="50%"
+        width="55%"
         :before-close="closeDataDialog"
         :modal-append-to-body="false"
         top="2vh"

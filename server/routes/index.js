@@ -22,6 +22,7 @@ router.get('/getTimeSeries', TimeSeries.getTimeSeries)
 router.get('/getTableData', Table.getTableData)
 router.get('/runANN', Neuralnetwork.runANN)
 router.get('/runLSTM', Neuralnetwork.runLSTM)
+router.get('/getInputData', Neuralnetwork.getInputData)
 
 module.exports = router
 
