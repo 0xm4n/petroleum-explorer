@@ -8,7 +8,7 @@ var Clustering = require('../controllers/clustering.js')
 var Visualization = require('../controllers/visualization.js')
 var TimeSeries = require('../controllers/time-series.js')
 var Table = require('../controllers/table.js')
-var Neuralnetwork = require('../controllers/neuralnetwork.js')
+var Neuralnetwork = require('../controllers/neural-network.js')
 
 router.get('/initMapData', Wells.initMapData)
 router.get('/searchByUWI', Search.searchByUWI)
@@ -22,8 +22,8 @@ router.get('/getTimeSeries', TimeSeries.getTimeSeries)
 router.get('/getTableData', Table.getTableData)
 router.get('/runANN', Neuralnetwork.runANN)
 router.get('/runLSTM', Neuralnetwork.runLSTM)
-router.get('/getInputData', Neuralnetwork.getInputData)
-router.get('/getWORData', Neuralnetwork.getWORData)
+router.get('/getDataSeries', Neuralnetwork.getDataSeries)
+router.get('/getDataTable', Neuralnetwork.getDataTable)
 
 module.exports = router
 
